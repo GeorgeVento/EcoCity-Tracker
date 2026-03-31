@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranking Δήμων — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="ecocity-plugin/assets/css/ecocity.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="report.html" class="nav-link">Αναφορά</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link active">Ranking</a></li>
+        <li><a href="admin.html" class="nav-link nav-admin">Admin</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>🏆 Ranking Δήμων</h1>
+    <p>Κατάταξη βάσει ποσοστού επίλυσης περιβαλλοντικών αναφορών.</p>
+  </section>
+
+  <section class="ranking-section">
+    <div class="container">
+
+      <!-- Podium top 3 -->
+      <div class="ranking-podium" id="podium">
+        <div class="report-card skeleton" style="min-height:200px"></div>
+        <div class="report-card skeleton" style="min-height:200px"></div>
+        <div class="report-card skeleton" style="min-height:200px"></div>
+      </div>
+
+      <!-- Full list 4-12 -->
+      <div class="ranking-list" id="rankingList">
+        <!-- filled by ranking.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <script src="ecocity-plugin/assets/js/ranking.js"></script>
+  <script src="ecocity-plugin/assets/js/main.js"></script>
+</body>
+</html>

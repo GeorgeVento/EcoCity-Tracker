@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoCity Tracker — Πλατφόρμα Αναφορών Πολιτών</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+ 
+  <!-- NAV -->
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-leaf">🌿</span>
+        <span class="logo-text">EcoCity</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link active">Αρχική</a></li>
+        <li><a href="html/report.html" class="nav-link">Αναφορά</a></li>
+        <li><a href="html/stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="html/ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="html/admin.html" class="nav-link nav-admin">Admin</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+ 
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Πλατφόρμα Αναφορών Πολιτών</div>
+    <h1 class="hero-title">Κάνε την πόλη<br/><em>σου καλύτερη</em></h1>
+    <p class="hero-sub">Ανέφερε προβλήματα στον δήμο σου, παρακολούθησε την πρόοδο<br/>και δες στατιστικά σε πραγματικό χρόνο.</p>
+    <div class="hero-actions">
+      <a href="report.html" class="btn btn-primary">Νέα Αναφορά</a>
+      <a href="stats.html" class="btn btn-outline">Δες Στατιστικά</a>
+    </div>
+    <div class="hero-scroll-hint">↓</div>
+  </section>
+ 
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon feature-icon--green">✏️</div>
+          <h3>Υπόβαλε Αναφορά</h3>
+          <p>Ανέφερε σκουπίδια, φθορές φωτισμού, βλάβες υποδομών και άλλα προβλήματα στον δήμο σου εύκολα.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon feature-icon--blue">📊</div>
+          <h3>Στατιστικά Live</h3>
+          <p>Δες αναλυτικά στατιστικά ανά κατηγορία και παρακολούθησε πόσα προβλήματα λύθηκαν.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon feature-icon--orange">⏱</div>
+          <h3>Παρακολούθηση</h3>
+          <p>Μάθε σε ποιο στάδιο βρίσκεται η αναφορά σου και πότε αναμένεται να επιλυθεί.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- STATS COUNTER -->
+  <section class="counter-section">
+    <div class="container">
+      <div class="counter-grid">
+        <div class="counter-item">
+          <span class="counter-number" data-target="1240">0</span>
+          <span class="counter-label">Αναφορές</span>
+        </div>
+        <div class="counter-item">
+          <span class="counter-number" data-target="87">0</span><span class="counter-suffix">%</span>
+          <span class="counter-label">Επιλύθηκαν</span>
+        </div>
+        <div class="counter-item">
+          <span class="counter-number" data-target="12">0</span>
+          <span class="counter-label">Δήμοι</span>
+        </div>
+        <div class="counter-item">
+          <span class="counter-number" data-target="3500">0</span>
+          <span class="counter-label">Χρήστες</span>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- RECENT REPORTS -->
+  <section class="recent-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Πρόσφατες Αναφορές</h2>
+        <a href="report.html" class="link-more">Δες όλες →</a>
+      </div>
+      <div class="reports-grid" id="recentReports">
+        <!-- Filled by JS -->
+        <div class="report-card skeleton"></div>
+        <div class="report-card skeleton"></div>
+        <div class="report-card skeleton"></div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <h2>Έτοιμος να βοηθήσεις;</h2>
+        <p>Κάθε αναφορά μετράει. Μαζί κάνουμε την Αττική καλύτερη.</p>
+        <a href="report.html" class="btn btn-primary btn-lg">Ξεκίνα τώρα →</a>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+ 
+  <script src="ecocity-plugin/assets/js/main.js"></script>
+</body>
+</html>
+ 

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Στατιστικά — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="ecocity-plugin/assets/css/ecocity.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="report.html" class="nav-link">Αναφορά</a></li>
+        <li><a href="stats.html" class="nav-link active">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="admin.html" class="nav-link nav-admin">Admin</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>📊 Στατιστικά</h1>
+    <p>Ανά δήμο, κατηγορία και κατάσταση αναφορών.</p>
+  </section>
+
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-layout">
+
+        <!-- Sidebar -->
+        <aside class="stats-sidebar">
+          <div class="stats-filter-card">
+            <h3>Δήμος</h3>
+            <div class="filter-btn-list" id="municipalityFilter">
+              <button class="filter-btn active" data-muni="all">🏙 Όλοι οι Δήμοι</button>
+              <button class="filter-btn" data-muni="Αθήνα">Αθήνα</button>
+              <button class="filter-btn" data-muni="Πειραιάς">Πειραιάς</button>
+              <button class="filter-btn" data-muni="Αιγάλεω">Αιγάλεω</button>
+              <button class="filter-btn" data-muni="Νίκαια">Νίκαια</button>
+              <button class="filter-btn" data-muni="Περιστέρι">Περιστέρι</button>
+              <button class="filter-btn" data-muni="Χαλάνδρι">Χαλάνδρι</button>
+              <button class="filter-btn" data-muni="Γλυφάδα">Γλυφάδα</button>
+              <button class="filter-btn" data-muni="Καλλιθέα">Καλλιθέα</button>
+              <button class="filter-btn" data-muni="Ηλιούπολη">Ηλιούπολη</button>
+              <button class="filter-btn" data-muni="Μαρούσι">Μαρούσι</button>
+              <button class="filter-btn" data-muni="Κηφισιά">Κηφισιά</button>
+              <button class="filter-btn" data-muni="Παλαιό Φάληρο">Παλαιό Φάληρο</button>
+            </div>
+          </div>
+
+          <div class="stats-filter-card">
+            <h3>Σύνοψη</h3>
+            <div id="summaryBox" style="display:flex;flex-direction:column;gap:10px;">
+              <div class="mini-kv"><span class="mk-label">Σύνολο</span><span class="mk-val" id="sumTotal">—</span></div>
+              <div class="mini-kv"><span class="mk-label">Επιλύθηκαν</span><span class="mk-val" id="sumResolved">—</span></div>
+              <div class="mini-kv"><span class="mk-label">Εκκρεμείς</span><span class="mk-val" id="sumPending">—</span></div>
+              <div class="mini-kv"><span class="mk-label">Ποσοστό</span><span class="mk-val" id="sumRate">—</span></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Charts -->
+        <div class="stats-main">
+          <div class="chart-card">
+            <h3>Αναφορές ανά Κατηγορία</h3>
+            <div class="chart-container"><canvas id="barChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Κατανομή κατά Κατάσταση</h3>
+            <div class="chart-container" style="height:240px;">
+              <canvas id="doughnutChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h3>Εβδομαδιαία Τάση (τελευταίες 8 εβδομάδες)</h3>
+            <div class="chart-container"><canvas id="lineChart"></canvas></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <style>
+    .mini-kv { display:flex; justify-content:space-between; align-items:center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .mini-kv:last-child { border:none; }
+    .mk-label { font-size:.85rem; color:var(--text-mid); }
+    .mk-val   { font-weight:700; color:var(--primary-dark); font-family: var(--font-display); font-size:1.1rem; }
+  </style>
+
+  <script src="ecocity-plugin/assets/js/stats.js"></script>
+  <script src="ecocity-plugin/assets/js/main.js"></script>
+</body>
+</html>

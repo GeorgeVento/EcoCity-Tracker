@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="ecocity-plugin/assets/css/ecocity.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity Tracker</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="report.html" class="nav-link">Αναφορά</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="admin.html" class="nav-link nav-admin active">Admin</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <section class="admin-section">
+    <div class="container">
+      <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+          <h3>Διαχείριση</h3>
+          <button class="admin-nav-item active" data-panel="reports">📋 Αναφορές<span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
+          <button class="admin-nav-item" data-panel="stats">📊 Στατιστικά</button>
+          <button class="admin-nav-item" data-panel="export">📥 Export</button>
+          <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;" />
+          <h3>Δήμος</h3>
+          <select class="form-select" id="adminMuniFilter" style="font-size:.85rem;">
+            <option value="all">Όλοι</option>
+            <option>Αθήνα</option>
+            <option>Πειραιάς</option>
+            <option>Αιγάλεω</option>
+            <option>Νίκαια</option>
+            <option>Περιστέρι</option>
+            <option>Χαλάνδρι</option>
+            <option>Γλυφάδα</option>
+            <option>Καλλιθέα</option>
+            <option>Ηλιούπολη</option>
+            <option>Μαρούσι</option>
+            <option>Κηφισιά</option>
+            <option>Παλαιό Φάληρο</option>
+          </select>
+        </aside>
+
+        <!-- Main content -->
+        <div class="admin-main">
+
+          <!-- Reports panel -->
+          <div id="panelReports">
+            <div class="admin-header-bar">
+              <h2>Αναφορές</h2>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn btn-secondary btn-sm" id="filterAll">Όλες</button>
+                <button class="btn btn-secondary btn-sm" id="filterPending">⏳ Εκκρεμείς</button>
+                <button class="btn btn-secondary btn-sm" id="filterCritical">🔴 Κρίσιμες</button>
+              </div>
+            </div>
+
+            <div class="admin-stats-mini" id="adminMiniStats">
+              <div class="mini-stat"><div class="mini-stat-val" id="msTotalReports">—</div><div class="mini-stat-lab">Σύνολο</div></div>
+              <div class="mini-stat"><div class="mini-stat-val" id="msPending">—</div><div class="mini-stat-lab">Εκκρεμείς</div></div>
+              <div class="mini-stat"><div class="mini-stat-val" id="msResolved">—</div><div class="mini-stat-lab">Επιλύθηκαν</div></div>
+              <div class="mini-stat"><div class="mini-stat-val" id="msCritical">—</div><div class="mini-stat-lab">Κρίσιμες</div></div>
+            </div>
+
+            <div class="admin-table-card">
+              <div class="table-toolbar">
+                <input class="table-search" type="text" id="tableSearch" placeholder="🔍 Αναζήτηση αναφοράς..." />
+                <select class="form-select" id="statusFilter" style="width:auto;">
+                  <option value="">Όλα τα status</option>
+                  <option value="pending">Εκκρεμεί</option>
+                  <option value="reviewed">Υπό εξέταση</option>
+                  <option value="resolved">Επιλύθηκε</option>
+                </select>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>#ID</th>
+                      <th>Τίτλος</th>
+                      <th>Δήμος</th>
+                      <th>Κατηγορία</th>
+                      <th>Σοβαρότητα</th>
+                      <th>Ημερομηνία</th>
+                      <th>Status</th>
+                      <th>Ενέργεια</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reportsTableBody">
+                    <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-light);">⏳ Φόρτωση...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats panel -->
+          <div id="panelStats" style="display:none;">
+            <div class="admin-header-bar"><h2>Στατιστικά Admin</h2></div>
+            <p style="color:var(--text-mid);">Δες αναλυτικά στατιστικά στη σελίδα <a href="stats.html" style="color:var(--primary)">Στατιστικά →</a></p>
+          </div>
+
+          <!-- Export panel -->
+          <div id="panelExport" style="display:none;">
+            <div class="admin-header-bar"><h2>Export Δεδομένων</h2></div>
+            <div class="form-card" style="max-width:100%;margin:0;">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Δήμος</label>
+                  <select class="form-select" id="exportMuni">
+                    <option value="all">Όλοι οι δήμοι</option>
+                    <option>Αθήνα</option><option>Πειραιάς</option><option>Αιγάλεω</option>
+                    <option>Νίκαια</option><option>Περιστέρι</option><option>Χαλάνδρι</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" id="exportStatus">
+                    <option value="all">Όλα</option>
+                    <option value="pending">Εκκρεμείς</option>
+                    <option value="reviewed">Υπό εξέταση</option>
+                    <option value="resolved">Επιλυμένες</option>
+                  </select>
+                </div>
+                <div class="form-group full">
+                  <button class="btn btn-green" id="exportBtn">📥 Export σε CSV</button>
+                  <span class="form-hint" style="margin-top:8px;">Το αρχείο αποθηκεύεται ως <code>ecocity_export.csv</code> με UTF-8 encoding.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <div id="toastContainer"></div>
+
+  <script src="ecocity-plugin/assets/js/admin.js"></script>
+  <script src="ecocity-plugin/assets/js/main.js"></script>
+</body>
+</html>

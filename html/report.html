@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Νέα Αναφορά — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="ecocity-plugin/assets/css/ecocity.css" />
+</head>
+<body>
+ 
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="report.html" class="nav-link active">Αναφορά</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="admin.html" class="nav-link nav-admin">Admin</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+ 
+  <section class="page-hero">
+    <h1>✏️ Νέα Αναφορά</h1>
+    <p>Κατέγραψε ένα πρόβλημα στον δήμο σου. Κάθε αναφορά βοηθάει.</p>
+  </section>
+ 
+  <section class="form-section">
+    <div class="container">
+      <div class="form-card">
+ 
+        <form id="reportForm" novalidate>
+ 
+          <div class="form-grid">
+ 
+            <!-- Τίτλος -->
+            <div class="form-group full">
+              <label class="form-label" for="title">Τίτλος <span class="required">*</span></label>
+              <input class="form-input" type="text" id="title" name="title"
+                     placeholder="π.χ. Σπασμένη πεζοδρόμιο στην οδό Κηφισού" required />
+              <span class="form-error">Ο τίτλος είναι υποχρεωτικός.</span>
+            </div>
+ 
+            <!-- Δήμος -->
+            <div class="form-group">
+              <label class="form-label" for="municipality">Δήμος <span class="required">*</span></label>
+              <select class="form-select" id="municipality" name="municipality" required>
+                <option value="">— Επέλεξε δήμο —</option>
+                <option>Αθήνα</option>
+                <option>Πειραιάς</option>
+                <option>Αιγάλεω</option>
+                <option>Νίκαια</option>
+                <option>Περιστέρι</option>
+                <option>Χαλάνδρι</option>
+                <option>Γλυφάδα</option>
+                <option>Καλλιθέα</option>
+                <option>Ηλιούπολη</option>
+                <option>Μαρούσι</option>
+                <option>Κηφισιά</option>
+                <option>Παλαιό Φάληρο</option>
+              </select>
+              <span class="form-error">Επέλεξε δήμο.</span>
+            </div>
+ 
+            <!-- Κατηγορία -->
+            <div class="form-group">
+              <label class="form-label" for="category">Κατηγορία <span class="required">*</span></label>
+              <select class="form-select" id="category" name="category" required>
+                <option value="">— Επέλεξε κατηγορία —</option>
+                <option>🗑 Σκουπίδια</option>
+                <option>🏗 Υποδομές</option>
+                <option>🔊 Ηχορύπανση</option>
+                <option>💨 Ποιότητα Αέρα</option>
+                <option>🏥 Υγεία</option>
+                <option>🚨 Έκτακτη Ανάγκη</option>
+                <option>💡 Φωτισμός</option>
+                <option>🌊 Νερό / Αποχέτευση</option>
+              </select>
+              <span class="form-error">Επέλεξε κατηγορία.</span>
+            </div>
+ 
+            <!-- Severity -->
+            <div class="form-group full">
+              <label class="form-label">Βαθμός Σοβαρότητας <span class="required">*</span></label>
+              <div class="severity-row" id="severityRow">
+                <label class="severity-option" data-value="low">
+                  <input type="radio" name="severity" value="low" />
+                  <span class="sev-btn sev-low">🟢 Χαμηλό</span>
+                </label>
+                <label class="severity-option" data-value="medium">
+                  <input type="radio" name="severity" value="medium" />
+                  <span class="sev-btn sev-medium">🟡 Μέτριο</span>
+                </label>
+                <label class="severity-option" data-value="critical">
+                  <input type="radio" name="severity" value="critical" />
+                  <span class="sev-btn sev-critical">🔴 Κρίσιμο</span>
+                </label>
+              </div>
+              <span class="form-error" id="severityError">Επέλεξε βαθμό σοβαρότητας.</span>
+            </div>
+ 
+            <!-- Περιγραφή -->
+            <div class="form-group full">
+              <label class="form-label" for="description">Περιγραφή <span class="required">*</span></label>
+              <textarea class="form-textarea" id="description" name="description"
+                        placeholder="Περίγραψε το πρόβλημα με λεπτομέρεια..." required></textarea>
+              <span class="form-error">Η περιγραφή είναι υποχρεωτική.</span>
+            </div>
+ 
+            <!-- GPS -->
+            <div class="form-group full">
+              <label class="form-label" for="gpsLat">Τοποθεσία GPS</label>
+              <div class="gps-row">
+                <input class="form-input" type="text" id="gpsLat" name="gps_lat" placeholder="Latitude" readonly />
+                <input class="form-input" type="text" id="gpsLng" name="gps_lng" placeholder="Longitude" readonly />
+                <button type="button" class="btn-gps" id="btnGPS">📍 Εντοπισμός</button>
+              </div>
+              <span class="form-hint" id="gpsStatus">Πάτα «Εντοπισμός» για αυτόματη συμπλήρωση.</span>
+            </div>
+ 
+            <!-- Φωτογραφία -->
+            <div class="form-group full">
+              <label class="form-label" for="photo">Φωτογραφία</label>
+              <div class="photo-upload" id="photoUploadArea">
+                <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/gif" />
+                <div class="photo-upload-icon">📷</div>
+                <p>Σύρε εδώ ή κάνε κλικ για επιλογή<br/><small>JPG, PNG, GIF · Μέγιστο 5MB</small></p>
+              </div>
+              <img id="photoPreview" src="" alt="Preview" />
+            </div>
+ 
+            <!-- Επώνυμο / Email -->
+            <div class="form-group">
+              <label class="form-label" for="reporterName">Όνομα (προαιρετικό)</label>
+              <input class="form-input" type="text" id="reporterName" name="reporter_name" placeholder="Γιώργος Π." />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reporterEmail">Email (για ενημέρωση)</label>
+              <input class="form-input" type="email" id="reporterEmail" name="reporter_email" placeholder="you@example.com" />
+            </div>
+ 
+          </div><!-- .form-grid -->
+ 
+          <div class="form-submit-bar">
+            <button type="reset" class="btn btn-secondary btn-sm">Καθαρισμός</button>
+            <button type="submit" class="btn btn-green" id="submitBtn">
+              <span id="submitText">Υποβολή Αναφοράς →</span>
+              <span id="submitSpinner" style="display:none">⏳ Αποστολή...</span>
+            </button>
+          </div>
+ 
+        </form>
+ 
+      </div>
+    </div>
+  </section>
+ 
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+ 
+  <div id="toastContainer"></div>
+ 
+  <style>
+    /* Severity radios */
+    .severity-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .severity-option { cursor: pointer; }
+    .severity-option input { display: none; }
+    .sev-btn {
+      display: inline-block; padding: 8px 20px; border-radius: 100px;
+      font-size: .875rem; font-weight: 600; border: 2px solid transparent;
+      transition: all .18s; user-select: none;
+    }
+    .sev-low      { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+    .sev-medium   { background: #fffbeb; color: #d97706; border-color: #fde68a; }
+    .sev-critical { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+    .severity-option input:checked + .sev-low      { background: #16a34a; color: #fff; }
+    .severity-option input:checked + .sev-medium   { background: #d97706; color: #fff; }
+    .severity-option input:checked + .sev-critical { background: #dc2626; color: #fff; }
+    .sev-btn:hover { opacity: .8; transform: scale(1.03); }
+  </style>
+ 
+  <script src="ecocity-plugin/assets/js/report.js"></script>
+  <script src="ecocity-plugin/assets/js/main.js"></script>
+</body>
+</html>
