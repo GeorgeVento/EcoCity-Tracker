@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Είσοδος Αρμοδίων — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="../index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="auth.html" class="nav-link nav-citizen">Πολίτες</a></li>
+        <li><a href="official-login.html" class="nav-link nav-admin active">Αρμόδιοι</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <!-- ── Secret Access Gate ───────────────────────────────────── -->
+  <div id="accessGate">
+    <section class="page-hero">
+      <h1>🔒 Περιορισμένη Πρόσβαση</h1>
+      <p>Εισάγετε τον κωδικό πρόσβασης για να συνεχίσετε.</p>
+    </section>
+    <section class="form-section">
+      <div class="container">
+        <div class="form-card" style="max-width:420px;">
+          <div style="text-align:center; margin-bottom:24px;">
+            <div style="font-size:2.5rem; margin-bottom:8px;">🏛</div>
+            <h2 style="margin:0 0 6px; font-family:var(--font-display);">Αρμόδιοι Δήμου</h2>
+            <p style="color:var(--text-mid); font-size:.9rem; margin:0;">Μόνο για εξουσιοδοτημένο προσωπικό.</p>
+          </div>
+          <div class="form-group full" id="grpGate">
+            <label class="form-label" for="gateInput">Κωδικός Πρόσβασης <span class="required">*</span></label>
+            <input class="form-input" type="password" id="gateInput" placeholder="••••••••••••••••••" autocomplete="off" />
+            <span class="form-error" id="gateError" style="display:none;">Λάθος κωδικός. Προσπαθήστε ξανά.</span>
+          </div>
+          <div class="form-submit-bar" style="margin-top:20px;">
+            <button type="button" class="btn btn-green" onclick="checkGate()">Επιβεβαίωση →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── Official Login (hidden until gate passes) ────────────── -->
+  <div id="officialLoginSection" style="display:none;">
+
+  <section class="page-hero">
+    <h1>🏛 Είσοδος Αρμοδίων Δήμου</h1>
+    <p>Περιορισμένη πρόσβαση — μόνο για εξουσιοδοτημένο προσωπικό δήμων.</p>
+  </section>
+
+  <section class="form-section">
+    <div class="container">
+      <div class="form-card" style="max-width:480px;">
+
+        <form id="officialLoginForm" novalidate>
+
+          <div class="form-grid">
+
+            <div class="form-group full" id="grpUsername">
+              <label class="form-label" for="offUsername">Όνομα χρήστη <span class="required">*</span></label>
+              <input class="form-input" type="text" id="offUsername" name="username"
+                     placeholder="π.χ. official_aigaleo" autocomplete="username" />
+              <span class="form-error">Το όνομα χρήστη είναι υποχρεωτικό.</span>
+            </div>
+
+            <div class="form-group full" id="grpPassword">
+              <label class="form-label" for="offPassword">Κωδικός <span class="required">*</span></label>
+              <input class="form-input" type="password" id="offPassword" name="password"
+                     placeholder="••••••••" autocomplete="current-password" />
+              <span class="form-error">Ο κωδικός είναι υποχρεωτικός.</span>
+            </div>
+
+          </div>
+
+          <div class="form-submit-bar">
+            <button type="submit" class="btn btn-green" id="loginBtn">
+              <span id="loginBtnText">Είσοδος →</span>
+              <span id="loginBtnSpinner" style="display:none">⏳ Σύνδεση...</span>
+            </button>
+          </div>
+
+        </form>
+
+        <p style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border); font-size:.875rem; color:var(--text-mid); text-align:center;">
+          Είσαι πολίτης;
+          <a href="auth.html" style="color:var(--primary); font-weight:600;">Σύνδεση πολίτη →</a>
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  </div><!-- /#officialLoginSection -->
+
+  <div id="toastContainer"></div>
+
+  <script src="../js/official.js"></script>
+  <script>
+    var ACCESS_CODE = '@Ec0City_D1m0s!26';
+    function checkGate() {
+      var val = document.getElementById('gateInput').value;
+      if (val === ACCESS_CODE) {
+        document.getElementById('accessGate').style.display = 'none';
+        document.getElementById('officialLoginSection').style.display = '';
+      } else {
+        document.getElementById('gateError').style.display = 'block';
+        document.getElementById('gateInput').value = '';
+        document.getElementById('gateInput').focus();
+      }
+    }
+    document.getElementById('gateInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkGate();
+    });
+  </script>
+</body>
+</html>

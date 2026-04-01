@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Είσοδος / Εγγραφή — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .auth-tabs .filter-btn {
+      border-radius: var(--radius-sm);
+      font-size: .95rem;
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="../index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="auth.html" class="nav-link nav-citizen active">Πολίτες</a></li>
+        <li><a href="official-login.html" class="nav-link nav-admin">Αρμόδιοι</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>🔐 Είσοδος / Εγγραφή</h1>
+    <p>Συνδέσου ή δημιούργησε λογαριασμό για να υποβάλεις αναφορά.</p>
+  </section>
+
+  <section class="form-section">
+    <div class="container">
+      <div class="form-card">
+
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="filter-btn active" id="tabLogin" type="button">Είσοδος</button>
+          <button class="filter-btn" id="tabRegister" type="button">Εγγραφή</button>
+        </div>
+
+        <!-- Login Panel -->
+        <div id="loginPanel">
+          <form id="loginForm" novalidate>
+
+            <div class="form-grid">
+              <div class="form-group full" id="grpLoginEmail">
+                <label class="form-label" for="loginEmail">Email <span class="required">*</span></label>
+                <input class="form-input" type="email" id="loginEmail" name="email"
+                       placeholder="you@example.com" autocomplete="email" />
+                <span class="form-error">Εισάγαγε έγκυρο email.</span>
+              </div>
+            </div>
+
+            <div class="form-submit-bar">
+              <button type="submit" class="btn btn-green">Είσοδος →</button>
+            </div>
+
+            <p style="margin-top:16px; font-size:.9rem; color:var(--text-mid); text-align:center;">
+              Δεν έχεις λογαριασμό;
+              <a href="#" id="switchToRegister" style="color:var(--primary); font-weight:600;">Εγγράψου εδώ</a>
+            </p>
+
+          </form>
+        </div>
+
+        <!-- Register Panel -->
+        <div id="registerPanel" style="display:none;">
+          <form id="registerForm" novalidate>
+
+            <div class="form-grid">
+
+              <div class="form-group full" id="grpFullName">
+                <label class="form-label" for="regFullName">Ονοματεπώνυμο <span class="required">*</span></label>
+                <input class="form-input" type="text" id="regFullName" name="fullName"
+                       placeholder="π.χ. Γιώργος Παπαδόπουλος" autocomplete="name" />
+                <span class="form-error">Το ονοματεπώνυμο είναι υποχρεωτικό.</span>
+              </div>
+
+              <div class="form-group" id="grpRegEmail">
+                <label class="form-label" for="regEmail">Email <span class="required">*</span></label>
+                <input class="form-input" type="email" id="regEmail" name="email"
+                       placeholder="you@example.com" autocomplete="email" />
+                <span class="form-error">Εισάγαγε έγκυρο email.</span>
+              </div>
+
+              <div class="form-group" id="grpMunicipality">
+                <label class="form-label" for="regMunicipality">Δήμος κατοικίας <span class="required">*</span></label>
+                <select class="form-select" id="regMunicipality" name="homeMunicipality">
+                  <option value="">— Επέλεξε δήμο —</option>
+                  <option>Αθήνα</option>
+                  <option>Πειραιάς</option>
+                  <option>Αιγάλεω</option>
+                  <option>Νίκαια</option>
+                  <option>Περιστέρι</option>
+                  <option>Χαλάνδρι</option>
+                  <option>Γλυφάδα</option>
+                  <option>Καλλιθέα</option>
+                  <option>Ηλιούπολη</option>
+                  <option>Μαρούσι</option>
+                  <option>Κηφισιά</option>
+                  <option>Παλαιό Φάληρο</option>
+                </select>
+                <span class="form-error">Επέλεξε τον δήμο κατοικίας σου.</span>
+              </div>
+
+            </div>
+
+            <div class="form-submit-bar">
+              <button type="submit" class="btn btn-green">Εγγραφή →</button>
+            </div>
+
+            <p style="margin-top:16px; font-size:.9rem; color:var(--text-mid); text-align:center;">
+              Έχεις ήδη λογαριασμό;
+              <a href="#" id="switchToLogin" style="color:var(--primary); font-weight:600;">Σύνδεσε εδώ</a>
+            </p>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <div id="toastContainer"></div>
+
+  <script src="../js/auth.js"></script>
+</body>
+</html>

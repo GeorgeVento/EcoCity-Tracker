@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Πίνακας Δήμου — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    .off-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .off-header-bar h2 { margin: 0; }
+
+    .off-filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .off-filter-btn {
+      padding: 7px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text-mid);
+      font-size: .875rem;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .off-filter-btn:hover { background: var(--light-bg); color: var(--primary-dark); }
+    .off-filter-btn.active { background: var(--light-bg); color: var(--primary-dark); border-color: var(--secondary); font-weight: 600; }
+
+    .off-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .off-stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .off-stat-val {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      line-height: 1;
+    }
+    .off-stat-lab {
+      font-size: .8rem;
+      color: var(--text-mid);
+      margin-top: 4px;
+    }
+
+    .off-official-info {
+      background: var(--light-bg);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      font-size: .875rem;
+      color: var(--primary-dark);
+    }
+    .off-official-info strong { font-weight: 600; }
+
+    .off-muni-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: var(--white);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-left: 6px;
+    }
+
+    @media (max-width: 900px) {
+      .off-stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="../index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="auth.html" class="nav-link nav-citizen">Πολίτες</a></li>
+        <li><a href="official-dashboard.html" class="nav-link nav-admin active">Πίνακας Δήμου</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <section class="admin-section" id="officialDashboard">
+    <div class="container">
+      <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+
+          <div class="off-official-info">
+            Συνδεδεμένος ως<br />
+            <strong id="officialNameDisplay">—</strong>
+            <span class="off-muni-badge" id="officialMuniName">—</span>
+          </div>
+
+          <h3>Στατιστικά δήμου</h3>
+          <div class="off-stat-grid">
+            <div class="off-stat-card">
+              <div class="off-stat-val" id="statTotal">—</div>
+              <div class="off-stat-lab">Σύνολο</div>
+            </div>
+            <div class="off-stat-card">
+              <div class="off-stat-val" id="statPending" style="color:var(--status-pending)">—</div>
+              <div class="off-stat-lab">Εκκρεμείς</div>
+            </div>
+            <div class="off-stat-card">
+              <div class="off-stat-val" id="statResolved" style="color:var(--status-resolved)">—</div>
+              <div class="off-stat-lab">Επιλύθηκαν</div>
+            </div>
+            <div class="off-stat-card">
+              <div class="off-stat-val" id="statCritical" style="color:var(--status-critical)">—</div>
+              <div class="off-stat-lab">Κρίσιμες</div>
+            </div>
+          </div>
+
+          <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;" />
+
+          <h3>Δημότες</h3>
+          <div class="off-stat-card" style="margin-bottom:16px;">
+            <div class="off-stat-val" id="statCitizens">—</div>
+            <div class="off-stat-lab">Εγγεγραμμένοι</div>
+          </div>
+
+          <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;" />
+
+          <button class="btn btn-danger btn-sm" id="btnLogout" style="width:100%;">
+            🚪 Αποσύνδεση
+          </button>
+
+        </aside>
+
+        <!-- Main content -->
+        <div class="admin-main">
+
+          <div class="off-header-bar">
+            <h2>Αναφορές — <span id="muniNameHeader">Δήμος</span></h2>
+            <button class="btn btn-sm btn-secondary" id="btnRefresh">🔄 Ανανέωση</button>
+          </div>
+
+          <!-- Filters -->
+          <div class="off-filter-row">
+            <button class="off-filter-btn active" data-filter="all">Όλες</button>
+            <button class="off-filter-btn" data-filter="pending">⏳ Εκκρεμείς</button>
+            <button class="off-filter-btn" data-filter="reviewed">🔍 Υπό εξέταση</button>
+            <button class="off-filter-btn" data-filter="resolved">✅ Επιλυμένες</button>
+            <button class="off-filter-btn" data-filter="critical">🔴 Κρίσιμες</button>
+          </div>
+
+          <!-- Table card -->
+          <div class="admin-table-card">
+            <div class="table-toolbar">
+              <input class="table-search" type="text" id="offSearch"
+                     placeholder="🔍 Αναζήτηση τίτλου ή κατηγορίας..." />
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Τίτλος</th>
+                    <th>Κατηγορία</th>
+                    <th>Σοβαρότητα</th>
+                    <th>Ημερομηνία</th>
+                    <th>Status</th>
+                    <th>Λεπτομέρειες</th>
+                  </tr>
+                </thead>
+                <tbody id="reportsTableBody">
+                  <tr>
+                    <td colspan="7" style="text-align:center;padding:40px;color:var(--text-light);">
+                      ⏳ Φόρτωση αναφορών...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Report detail modal -->
+  <div id="reportModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:var(--white); border-radius:var(--radius-lg); max-width:560px; width:100%; padding:32px; box-shadow:var(--shadow-lg); position:relative; max-height:90vh; overflow-y:auto;">
+      <button id="closeModal" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-mid);">✕</button>
+      <h3 id="modalTitle" style="margin-top:0;"></h3>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <div id="toastContainer"></div>
+
+  <script src="../js/official.js"></script>
+</body>
+</html>

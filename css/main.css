@@ -87,6 +87,11 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   border-radius: 8px; padding: 6px 16px;
 }
 .nav-admin:hover { background: var(--primary-dark) !important; }
+.nav-citizen {
+  border: 2px solid var(--primary); color: var(--primary) !important;
+  border-radius: 8px; padding: 6px 16px;
+}
+.nav-citizen:hover { background: var(--light-bg) !important; }
 .nav-toggle { display: none; flex-direction: column; gap: 5px; padding: 4px; }
 .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--text-dark); border-radius: 2px; transition: var(--transition); }
  
