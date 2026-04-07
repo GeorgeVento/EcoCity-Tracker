@@ -13,28 +13,7 @@
   }
 
   // ── Sample fallback data ──────────────────────────────────────
-  var SAMPLE = [
-    { municipality:'Αθήνα',       category:'🗑 Σκουπίδια',           severity:'low',      status:'resolved', createdAt:'2026-01-10T10:00:00Z' },
-    { municipality:'Αθήνα',       category:'🏗 Υποδομές',             severity:'medium',   status:'pending',  createdAt:'2026-01-15T10:00:00Z' },
-    { municipality:'Αθήνα',       category:'💡 Φωτισμός',             severity:'low',      status:'resolved', createdAt:'2026-02-05T10:00:00Z' },
-    { municipality:'Πειραιάς',    category:'🗑 Σκουπίδια',            severity:'critical', status:'resolved', createdAt:'2026-01-12T10:00:00Z' },
-    { municipality:'Πειραιάς',    category:'🌊 Νερό / Αποχέτευση',   severity:'critical', status:'reviewed', createdAt:'2026-01-22T10:00:00Z' },
-    { municipality:'Αιγάλεω',     category:'🔊 Ηχορύπανση',           severity:'medium',   status:'pending',  createdAt:'2026-02-01T10:00:00Z' },
-    { municipality:'Αιγάλεω',     category:'🏗 Υποδομές',             severity:'low',      status:'resolved', createdAt:'2026-02-05T10:00:00Z' },
-    { municipality:'Νίκαια',      category:'🗑 Σκουπίδια',            severity:'low',      status:'resolved', createdAt:'2026-02-08T10:00:00Z' },
-    { municipality:'Περιστέρι',   category:'💨 Ποιότητα Αέρα',        severity:'medium',   status:'resolved', createdAt:'2026-02-10T10:00:00Z' },
-    { municipality:'Χαλάνδρι',    category:'🏗 Υποδομές',             severity:'low',      status:'pending',  createdAt:'2026-02-15T10:00:00Z' },
-    { municipality:'Γλυφάδα',     category:'🗑 Σκουπίδια',            severity:'low',      status:'resolved', createdAt:'2026-02-18T10:00:00Z' },
-    { municipality:'Καλλιθέα',    category:'💡 Φωτισμός',             severity:'medium',   status:'resolved', createdAt:'2026-02-20T10:00:00Z' },
-    { municipality:'Ηλιούπολη',   category:'🌊 Νερό / Αποχέτευση',   severity:'low',      status:'reviewed', createdAt:'2026-03-01T10:00:00Z' },
-    { municipality:'Μαρούσι',     category:'🗑 Σκουπίδια',            severity:'critical', status:'resolved', createdAt:'2026-03-05T10:00:00Z' },
-    { municipality:'Κηφισιά',     category:'🏥 Υγεία',                severity:'medium',   status:'resolved', createdAt:'2026-03-10T10:00:00Z' },
-    { municipality:'Παλαιό Φάληρο',category:'🏗 Υποδομές',           severity:'low',      status:'pending',  createdAt:'2026-03-15T10:00:00Z' },
-    { municipality:'Αθήνα',       category:'🚨 Έκτακτη Ανάγκη',      severity:'critical', status:'resolved', createdAt:'2026-03-18T10:00:00Z' },
-    { municipality:'Πειραιάς',    category:'🏥 Υγεία',                severity:'medium',   status:'resolved', createdAt:'2026-03-20T10:00:00Z' },
-    { municipality:'Αιγάλεω',     category:'💡 Φωτισμός',             severity:'low',      status:'pending',  createdAt:'2026-03-22T10:00:00Z' },
-    { municipality:'Μαρούσι',     category:'🏗 Υποδομές',             severity:'medium',   status:'resolved', createdAt:'2026-03-25T10:00:00Z' }
-  ];
+  var SAMPLE = [];
 
   var CATEGORIES = [
     '🗑 Σκουπίδια', '🏗 Υποδομές', '🔊 Ηχορύπανση', '💨 Ποιότητα Αέρα',
@@ -50,13 +29,18 @@
   function loadData() {
     try {
       var stored = JSON.parse(localStorage.getItem('ecocity_reports') || '[]');
-      allReports = stored.length > 0 ? stored : SAMPLE;
-    } catch (e) { allReports = SAMPLE; }
+      allReports = Array.isArray(stored) ? stored : [];
+    } catch (e) { allReports = []; }
     render();
 
     fetch('/api/stats')
       .then(function (r) { return r.json(); })
-      .then(function (d) { if (d && d.reports && d.reports.length > 0) { allReports = d.reports; render(); } })
+      .then(function (d) {
+        if (d && Array.isArray(d.reports)) {
+          allReports = d.reports;
+          render();
+        }
+      })
       .catch(function () {});
   }
 

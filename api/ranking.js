@@ -6,12 +6,6 @@ const { pool } = require('../database/db');
 
 const router = express.Router();
 
-var FALLBACK = {
-  'Μαρούσι': 94, 'Γλυφάδα': 91, 'Κηφισιά': 88, 'Χαλάνδρι': 85,
-  'Αθήνα': 82, 'Παλαιό Φάληρο': 79, 'Καλλιθέα': 77, 'Πειραιάς': 74,
-  'Ηλιούπολη': 71, 'Αιγάλεω': 68, 'Νίκαια': 65, 'Περιστέρι': 62
-};
-
 // ── GET /api/ranking ─────────────────────────────────────────
 router.get('/', async function (_req, res) {
   try {
@@ -34,7 +28,7 @@ router.get('/', async function (_req, res) {
     var ranking = munis.map(function (muni) {
       var s = statsMap[muni];
       if (!s || s.total === 0) {
-        return { name: muni, total: 0, resolved: 0, pending: 0, rate: FALLBACK[muni] || 50 };
+        return { name: muni, total: 0, resolved: 0, pending: 0, rate: 0 };
       }
       return {
         name:     muni,

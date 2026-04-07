@@ -19,13 +19,6 @@
   ];
 
   // Fallback ποσοστά όταν δεν υπάρχουν αναφορές στο localStorage
-  var FALLBACK = {
-    'Μαρούσι': 94, 'Γλυφάδα': 91, 'Κηφισιά': 88,
-    'Χαλάνδρι': 85, 'Αθήνα': 82, 'Παλαιό Φάληρο': 79,
-    'Καλλιθέα': 77, 'Πειραιάς': 74, 'Ηλιούπολη': 71,
-    'Αιγάλεω': 68, 'Νίκαια': 65, 'Περιστέρι': 62
-  };
-
   // ── Υπολογισμός κατάταξης ────────────────────────────────────
   function calcRanking() {
     var reports = [];
@@ -34,7 +27,7 @@
     var data = MUNICIPALITIES.map(function (muni) {
       var muniR = reports.filter(function (r) { return r.municipality === muni; });
       if (muniR.length === 0) {
-        return { name: muni, total: 0, resolved: 0, rate: FALLBACK[muni] || 50 };
+        return { name: muni, total: 0, resolved: 0, rate: 0 };
       }
       var resolved = muniR.filter(function (r) { return r.status === 'resolved'; }).length;
       return { name: muni, total: muniR.length, resolved: resolved, rate: Math.round((resolved / muniR.length) * 100) };
