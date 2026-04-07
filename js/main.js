@@ -2,6 +2,18 @@
 (function () {
   'use strict';
 
+  // ── Guard: Νέα Αναφορά → πρώτα σύνδεση ─────────────────────
+  document.querySelectorAll('a[href="html/report.html"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var user = null;
+      try { user = JSON.parse(localStorage.getItem('ecocity_user') || 'null'); } catch (_) {}
+      if (!user) {
+        e.preventDefault();
+        window.location.href = 'html/auth.html';
+      }
+    });
+  });
+
   // ── Mobile Nav Toggle ────────────────────────────────────────
   var toggle   = document.getElementById('navToggle');
   var navLinks = document.getElementById('navLinks');
