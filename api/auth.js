@@ -1,118 +1,166 @@
-/* api/auth.js — Αυθεντικοποίηση πολιτών και αρμοδίων (JWT) */
+/* api/auth.js — Αυθεντικοποίηση πολιτών και αρμοδίων (JWT + MySQL + email) */
 'use strict';
 
-const express = require('express');
-const jwt     = require('jsonwebtoken');
-const path    = require('path');
-const fs      = require('fs');
+const express  = require('express');
+const jwt      = require('jsonwebtoken');
+const bcrypt   = require('bcryptjs');
+const crypto   = require('crypto');
+const { pool } = require('../database/db');
+const { sendVerificationEmail } = require('./mailer');
 
 const router = express.Router();
 
 const JWT_SECRET  = process.env.JWT_SECRET  || 'EcoCitySecretKey2026_SAEK';
 const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '7d';
 
-const USERS_FILE = path.join(__dirname, '..', 'data', 'users.json');
-
-// ── Αρμόδιοι ανά δήμο (αποθηκεύονται εδώ, ΟΧΙ στη βάση) ────
-// Σε production: χρησιμοποιήστε bcrypt για hashing κωδικών.
-const OFFICIALS = [
-  { id:  1, username: 'official_aigaleo',      password: 'Aig@l3o!2026',     municipality: 'Αιγάλεω',          fullName: 'Αρμόδιος Αιγάλεω' },
-  { id:  2, username: 'official_athens',       password: 'Ath3ns@2026!',      municipality: 'Αθήνα',             fullName: 'Αρμόδιος Αθήνας' },
-  { id:  3, username: 'official_piraeus',      password: 'P1r@3us!2026',      municipality: 'Πειραιάς',          fullName: 'Αρμόδιος Πειραιά' },
-  { id:  4, username: 'official_nikaia',       password: 'N1k@1a!2026',       municipality: 'Νίκαια',            fullName: 'Αρμόδιος Νίκαιας' },
-  { id:  5, username: 'official_peristeri',    password: 'P3r1st3r1!2026',    municipality: 'Περιστέρι',         fullName: 'Αρμόδιος Περιστερίου' },
-  { id:  6, username: 'official_chalandri',    password: 'Ch@l@ndr1!2026',    municipality: 'Χαλάνδρι',          fullName: 'Αρμόδιος Χαλανδρίου' },
-  { id:  7, username: 'official_glyfada',      password: 'Glyf@d@!2026',      municipality: 'Γλυφάδα',           fullName: 'Αρμόδιος Γλυφάδας' },
-  { id:  8, username: 'official_kallithea',    password: 'K@ll1th3@!2026',    municipality: 'Καλλιθέα',          fullName: 'Αρμόδιος Καλλιθέας' },
-  { id:  9, username: 'official_ilioupoli',    password: 'Il1up0l1!2026',     municipality: 'Ηλιούπολη',         fullName: 'Αρμόδιος Ηλιούπολης' },
-  { id: 10, username: 'official_maroussi',     password: 'M@r0uss1!2026',     municipality: 'Μαρούσι',           fullName: 'Αρμόδιος Μαρουσίου' },
-  { id: 11, username: 'official_kifissia',     password: 'K1f1ss1@!2026',     municipality: 'Κηφισιά',           fullName: 'Αρμόδιος Κηφισιάς' },
-  { id: 12, username: 'official_palaiofaliro', password: 'P@l@i0F@l!2026',    municipality: 'Παλαιό Φάληρο',    fullName: 'Αρμόδιος Παλαιού Φαλήρου' }
-];
-
-// ── Helpers ──────────────────────────────────────────────────
-function readUsers() {
-  try { return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8')); }
-  catch (e) { return []; }
-}
-function writeUsers(users) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
-}
-
 // ── POST /api/auth/citizen/login ─────────────────────────────
-router.post('/citizen/login', function (req, res) {
-  var email = (req.body.email || '').trim().toLowerCase();
-  if (!email) return res.status(400).json({ success: false, message: 'Email υποχρεωτικό.' });
+router.post('/citizen/login', async function (req, res) {
+  try {
+    var email = (req.body.email || '').trim().toLowerCase();
+    if (!email) return res.status(400).json({ success: false, message: 'Email υποχρεωτικό.' });
 
-  var users = readUsers();
-  var user  = users.find(function (u) { return u.email === email && u.role === 'citizen'; });
+    var [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (rows.length === 0) {
+      return res.status(401).json({ success: false, message: 'Δεν βρέθηκε λογαριασμός με αυτό το email.' });
+    }
 
-  if (!user) return res.status(401).json({ success: false, message: 'Δεν βρέθηκε λογαριασμός.' });
-
-  res.json({ success: true, user: { fullName: user.fullName, email: user.email, homeMunicipality: user.homeMunicipality } });
+    var user = rows[0];
+    res.json({
+      success: true,
+      user: {
+        id:               user.id,
+        fullName:         user.full_name,
+        email:            user.email,
+        homeMunicipality: user.home_municipality,
+        isVerified:       !!user.is_verified
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
+  }
 });
 
 // ── POST /api/auth/citizen/register ─────────────────────────
-router.post('/citizen/register', function (req, res) {
-  var fullName         = (req.body.fullName        || '').trim();
-  var email            = (req.body.email           || '').trim().toLowerCase();
-  var homeMunicipality = (req.body.homeMunicipality|| '').trim();
+router.post('/citizen/register', async function (req, res) {
+  try {
+    var fullName         = (req.body.fullName         || '').trim();
+    var email            = (req.body.email            || '').trim().toLowerCase();
+    var homeMunicipality = (req.body.homeMunicipality || '').trim();
 
-  if (!fullName || !email || !homeMunicipality) {
-    return res.status(400).json({ success: false, message: 'Όλα τα πεδία υποχρεωτικά.' });
+    if (!fullName || !email || !homeMunicipality) {
+      return res.status(400).json({ success: false, message: 'Όλα τα πεδία υποχρεωτικά.' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, message: 'Μη έγκυρο email.' });
+    }
+
+    var [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
+    if (existing.length > 0) {
+      return res.status(409).json({ success: false, message: 'Υπάρχει ήδη λογαριασμός με αυτό το email.' });
+    }
+
+    // Δημιουργία token επιβεβαίωσης (λήγει σε 24 ώρες)
+    var token      = crypto.randomBytes(32).toString('hex');
+    var expiresAt  = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    var [result] = await pool.query(
+      'INSERT INTO users (full_name, email, home_municipality, verification_token, token_expires_at) VALUES (?, ?, ?, ?, ?)',
+      [fullName, email, homeMunicipality, token, expiresAt]
+    );
+
+    // Στολή email (αν αποτύχει, η εγγραφή ΔΕΝ ακυρώνεται)
+    try {
+      await sendVerificationEmail(email, fullName, token);
+    } catch (mailErr) {
+      console.error('⚠️  Αποτυχία αποστολής email:', mailErr.message);
+    }
+
+    res.status(201).json({
+      success: true,
+      emailSent: true,
+      user: {
+        id:               result.insertId,
+        fullName:         fullName,
+        email:            email,
+        homeMunicipality: homeMunicipality,
+        isVerified:       false
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
   }
-  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRe.test(email)) {
-    return res.status(400).json({ success: false, message: 'Μη έγκυρο email.' });
+});
+
+// ── GET /api/auth/verify-email?token=xxx ─────────────────────
+router.get('/verify-email', async function (req, res) {
+  try {
+    var token = req.query.token || '';
+    if (!token) return res.status(400).json({ success: false, message: 'Token λείπει.' });
+
+    var [rows] = await pool.query(
+      'SELECT * FROM users WHERE verification_token = ?', [token]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Άκυρος ή ληγμένος σύνδεσμος.' });
+    }
+
+    var user = rows[0];
+    if (user.is_verified) {
+      return res.json({ success: true, alreadyVerified: true, message: 'Το email είναι ήδη επιβεβαιωμένο.' });
+    }
+
+    if (new Date() > new Date(user.token_expires_at)) {
+      return res.status(410).json({ success: false, message: 'Ο σύνδεσμος επιβεβαίωσης έχει λήξει.' });
+    }
+
+    await pool.query(
+      'UPDATE users SET is_verified = 1, verification_token = NULL, token_expires_at = NULL WHERE id = ?',
+      [user.id]
+    );
+
+    res.json({ success: true, message: 'Το email επιβεβαιώθηκε επιτυχώς!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
   }
-
-  var users = readUsers();
-  if (users.find(function (u) { return u.email === email; })) {
-    return res.status(409).json({ success: false, message: 'Υπάρχει ήδη λογαριασμός με αυτό το email.' });
-  }
-
-  var newUser = {
-    id:               Date.now(),
-    role:             'citizen',
-    fullName:         fullName,
-    email:            email,
-    homeMunicipality: homeMunicipality,
-    registeredAt:     new Date().toISOString()
-  };
-  users.push(newUser);
-  writeUsers(users);
-
-  res.status(201).json({ success: true, user: { fullName: newUser.fullName, email: newUser.email, homeMunicipality: newUser.homeMunicipality } });
 });
 
 // ── POST /api/auth/official/login ────────────────────────────
-router.post('/official/login', function (req, res) {
-  var username = (req.body.username || '').trim();
-  var password = req.body.password || '';
+router.post('/official/login', async function (req, res) {
+  try {
+    var username = (req.body.username || '').trim();
+    var password = req.body.password  || '';
 
-  if (!username || !password) {
-    return res.status(400).json({ success: false, message: 'Username και κωδικός υποχρεωτικά.' });
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Username και κωδικός υποχρεωτικά.' });
+    }
+
+    var [rows] = await pool.query(
+      'SELECT * FROM officials WHERE username = ? AND is_active = 1', [username]
+    );
+    if (rows.length === 0 || !bcrypt.compareSync(password, rows[0].password)) {
+      return res.status(401).json({ success: false, message: 'Λάθος username ή κωδικός.' });
+    }
+
+    var official = rows[0];
+    var token = jwt.sign(
+      { id: official.id, username: official.username, municipality: official.municipality, role: 'official' },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES }
+    );
+
+    res.json({
+      success:  true,
+      token:    token,
+      official: { id: official.id, fullName: official.full_name, municipality: official.municipality, username: official.username }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
   }
-
-  var official = OFFICIALS.find(function (o) {
-    return o.username === username && o.password === password;
-  });
-
-  if (!official) {
-    return res.status(401).json({ success: false, message: 'Λάθος username ή κωδικός.' });
-  }
-
-  var token = jwt.sign(
-    { id: official.id, username: official.username, municipality: official.municipality, role: 'official' },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES }
-  );
-
-  res.json({
-    success: true,
-    token: token,
-    official: { id: official.id, fullName: official.fullName, municipality: official.municipality, username: official.username }
-  });
 });
 
 // ── GET /api/auth/verify ─────────────────────────────────────

@@ -1,0 +1,100 @@
+/* database/seed.js — Αρχικά δεδομένα: δήμοι + αρμόδιοι
+   Εκτέλεση: node database/seed.js  ή  npm run seed
+*/
+'use strict';
+
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+
+const bcrypt       = require('bcryptjs');
+const { pool, initDB } = require('./db');
+
+const SALT_ROUNDS = 10;
+
+const MUNICIPALITIES = [
+  'Αθήνα', 'Πειραιάς', 'Αιγάλεω', 'Νίκαια', 'Περιστέρι',
+  'Χαλάνδρι', 'Γλυφάδα', 'Καλλιθέα', 'Ηλιούπολη',
+  'Μαρούσι', 'Κηφισιά', 'Παλαιό Φάληρο'
+];
+
+const OFFICIALS_RAW = [
+  // ── Αθήνα (2 αρμόδιοι) ────────────────────────────────────
+  { username: 'official_athens_1',     password: 'Ath3ns@2026!',     municipality: 'Αθήνα',           fullName: 'Γεώργιος Αθηναίος' },
+  { username: 'official_athens_2',     password: 'Ath3ns#2026$',     municipality: 'Αθήνα',           fullName: 'Μαρία Παπαδοπούλου' },
+
+  // ── Αιγάλεω (2 αρμόδιοι) ──────────────────────────────────
+  { username: 'official_aigaleo_1',    password: 'Aig@l3o!2026',     municipality: 'Αιγάλεω',         fullName: 'Νίκος Βεντουράτος' },
+  { username: 'official_aigaleo_2',    password: 'Aig@l3o#2026$',    municipality: 'Αιγάλεω',         fullName: 'Ελένη Αιγαλεώτη' },
+
+  // ── Πειραιάς (2 αρμόδιοι) ─────────────────────────────────
+  { username: 'official_piraeus_1',    password: 'P1r@3us!2026',     municipality: 'Πειραιάς',        fullName: 'Κώστας Πειραιώτης' },
+  { username: 'official_piraeus_2',    password: 'P1r@3us#2026$',    municipality: 'Πειραιάς',        fullName: 'Σοφία Λιμενίου' },
+
+  // ── Νίκαια ────────────────────────────────────────────────
+  { username: 'official_nikaia',       password: 'N1k@1a!2026',      municipality: 'Νίκαια',          fullName: 'Δημήτρης Νικαιέας' },
+
+  // ── Περιστέρι ─────────────────────────────────────────────
+  { username: 'official_peristeri',    password: 'P3r1st3r1!2026',   municipality: 'Περιστέρι',       fullName: 'Αντώνης Περιστεριώτης' },
+
+  // ── Χαλάνδρι ─────────────────────────────────────────────
+  { username: 'official_chalandri',    password: 'Ch@l@ndr1!2026',   municipality: 'Χαλάνδρι',        fullName: 'Ιωάννης Χαλανδριώτης' },
+
+  // ── Γλυφάδα ───────────────────────────────────────────────
+  { username: 'official_glyfada',      password: 'Glyf@d@!2026',     municipality: 'Γλυφάδα',         fullName: 'Χρήστος Παραλιώτης' },
+
+  // ── Καλλιθέα ─────────────────────────────────────────────
+  { username: 'official_kallithea',    password: 'K@ll1th3@!2026',   municipality: 'Καλλιθέα',        fullName: 'Βασιλική Καλλιθεάτη' },
+
+  // ── Ηλιούπολη ────────────────────────────────────────────
+  { username: 'official_ilioupoli',    password: 'Il1up0l1!2026',    municipality: 'Ηλιούπολη',       fullName: 'Παναγιώτης Ηλιουπολίτης' },
+
+  // ── Μαρούσι ───────────────────────────────────────────────
+  { username: 'official_maroussi',     password: 'M@r0uss1!2026',    municipality: 'Μαρούσι',         fullName: 'Αλέξανδρος Μαρουσιώτης' },
+
+  // ── Κηφισιά ───────────────────────────────────────────────
+  { username: 'official_kifissia',     password: 'K1f1ss1@!2026',    municipality: 'Κηφισιά',         fullName: 'Θεοδώρα Κηφισιώτη' },
+
+  // ── Παλαιό Φάληρο ────────────────────────────────────────
+  { username: 'official_palaiofaliro', password: 'P@l@i0F@l!2026',   municipality: 'Παλαιό Φάληρο',  fullName: 'Σταύρος Φαληριώτης' }
+];
+
+async function seed() {
+  // Δημιουργία πινάκων αν δεν υπάρχουν
+  await initDB();
+
+  // ── 1. Δήμοι ─────────────────────────────────────────────
+  for (var muni of MUNICIPALITIES) {
+    await pool.query('INSERT IGNORE INTO municipalities (name) VALUES (?)', [muni]);
+  }
+  console.log('✅  Δήμοι: ' + MUNICIPALITIES.length + ' εγγραφές');
+
+  // ── 2. Αρμόδιοι ──────────────────────────────────────────
+  var inserted = 0;
+  for (var o of OFFICIALS_RAW) {
+    var [rows] = await pool.query('SELECT id FROM officials WHERE username = ?', [o.username]);
+    if (rows.length === 0) {
+      var hashed = bcrypt.hashSync(o.password, SALT_ROUNDS);
+      await pool.query(
+        'INSERT INTO officials (username, password, full_name, municipality) VALUES (?, ?, ?, ?)',
+        [o.username, hashed, o.fullName, o.municipality]
+      );
+      inserted++;
+    }
+  }
+  console.log('✅  Αρμόδιοι: ' + inserted + ' νέοι / ' + OFFICIALS_RAW.length + ' σύνολο');
+
+  // ── 3. Εκτύπωση credentials ──────────────────────────────
+  console.log('\n📋  Στοιχεία σύνδεσης αρμοδίων:');
+  console.log('─'.repeat(65));
+  OFFICIALS_RAW.forEach(function (o) {
+    console.log('  ' + o.municipality.padEnd(20) + o.username.padEnd(28) + o.password);
+  });
+  console.log('─'.repeat(65));
+  console.log('\n🌿  Seed ολοκληρώθηκε. Τρέξτε: npm start\n');
+
+  await pool.end();
+}
+
+seed().catch(function (err) {
+  console.error('❌  Seed απέτυχε:', err.message);
+  process.exit(1);
+});

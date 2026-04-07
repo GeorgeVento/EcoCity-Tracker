@@ -3,10 +3,11 @@
 
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
-const express  = require('express');
-const cors     = require('cors');
-const path     = require('path');
-const fs       = require('fs');
+const express        = require('express');
+const cors           = require('cors');
+const path           = require('path');
+const fs             = require('fs');
+const { initDB }     = require('../database/db');
 
 const authRoutes          = require('./auth');
 const reportsRoutes       = require('./reports');
@@ -18,14 +19,10 @@ const notificationsRoutes = require('./notifications');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
-// ── Directories ──────────────────────────────────────────────
-const ROOT       = path.join(__dirname, '..');
-const UPLOADS    = path.join(ROOT, 'uploads');
-const DATA_DIR   = path.join(ROOT, 'data');
+const ROOT    = path.join(__dirname, '..');
+const UPLOADS = path.join(ROOT, 'uploads');
 
-[UPLOADS, DATA_DIR].forEach(function (dir) {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-});
+if (!fs.existsSync(UPLOADS)) fs.mkdirSync(UPLOADS, { recursive: true });
 
 // ── Middleware ───────────────────────────────────────────────
 app.use(cors());
@@ -44,25 +41,28 @@ app.use('/api/ranking',       rankingRoutes);
 app.use('/api/export',        exportRoutes);
 app.use('/api/notifications', notificationsRoutes);
 
-// ── Health check ─────────────────────────────────────────────
-app.get('/api/health', function (req, res) {
+app.get('/api/health', function (_req, res) {
   res.json({ status: 'ok', version: '1.0.0', time: new Date().toISOString() });
 });
 
-// ── 404 για αγνώστα /api/* ───────────────────────────────────
-app.use('/api/*', function (req, res) {
+app.use('/api/*', function (_req, res) {
   res.status(404).json({ error: 'Endpoint not found.' });
 });
 
-// ── Fallback: serve index.html (SPA) ─────────────────────────
-app.get('*', function (req, res) {
+app.get('*', function (_req, res) {
   res.sendFile(path.join(ROOT, 'index.html'));
 });
 
-// ── Start ─────────────────────────────────────────────────────
-app.listen(PORT, function () {
-  console.log('\u{1F33F} EcoCity Tracker  →  http://localhost:' + PORT);
-  console.log('   API base         →  http://localhost:' + PORT + '/api');
+// ── Start (μετά σύνδεση στη MySQL) ───────────────────────────
+initDB().then(function () {
+  app.listen(PORT, function () {
+    console.log('🌿 EcoCity Tracker  →  http://localhost:' + PORT);
+    console.log('   API base         →  http://localhost:' + PORT + '/api');
+  });
+}).catch(function (err) {
+  console.error('❌  Αδυναμία σύνδεσης στη MySQL:', err.message);
+  console.error('   Βεβαιώσου ότι το MAMP τρέχει και η βάση "ecocity" υπάρχει.');
+  process.exit(1);
 });
 
 module.exports = app;

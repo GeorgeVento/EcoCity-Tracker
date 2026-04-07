@@ -1,38 +1,40 @@
-/* api/notifications.js — Μέτρηση εκκρεμών αναφορών για badge */
+/* api/notifications.js — Μέτρηση εκκρεμών αναφορών για badge (MySQL) */
 'use strict';
 
-const express = require('express');
-const path    = require('path');
-const fs      = require('fs');
+const express  = require('express');
+const { pool } = require('../database/db');
 const { optionalToken } = require('../middleware/auth.middleware');
 
-const router       = express.Router();
-const REPORTS_FILE = path.join(__dirname, '..', 'data', 'reports.json');
-
-function readReports() {
-  try { return JSON.parse(fs.readFileSync(REPORTS_FILE, 'utf8')); } catch (e) { return []; }
-}
+const router = express.Router();
 
 // ── GET /api/notifications ───────────────────────────────────
-// Επιστρέφει τον αριθμό εκκρεμών αναφορών.
-// Αν είναι συνδεδεμένος αρμόδιος (JWT), φιλτράρει ανά δήμο.
-router.get('/', optionalToken, function (req, res) {
-  var reports = readReports();
+router.get('/', optionalToken, async function (req, res) {
+  try {
+    var filter = '';
+    var params = [];
 
-  if (req.user && req.user.municipality) {
-    reports = reports.filter(function (r) { return r.municipality === req.user.municipality; });
+    if (req.user && req.user.municipality) {
+      filter = 'AND municipality = ?';
+      params = [req.user.municipality];
+    }
+
+    var [[pen]] = await pool.query(
+      "SELECT COUNT(*) AS n FROM reports WHERE status = 'pending' " + filter, params);
+    var [[cri]] = await pool.query(
+      "SELECT COUNT(*) AS n FROM reports WHERE severity = 'critical' AND status != 'resolved' " + filter, params);
+    var [[opn]] = await pool.query(
+      "SELECT COUNT(*) AS n FROM reports WHERE status != 'resolved' " + filter, params);
+
+    res.json({
+      success:       true,
+      pendingCount:  pen.n,
+      criticalCount: cri.n,
+      totalOpen:     opn.n,
+      timestamp:     new Date().toISOString()
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
   }
-
-  var pendingCount  = reports.filter(function (r) { return r.status === 'pending';  }).length;
-  var criticalCount = reports.filter(function (r) { return r.severity === 'critical' && r.status !== 'resolved'; }).length;
-
-  res.json({
-    success:       true,
-    pendingCount:  pendingCount,
-    criticalCount: criticalCount,
-    totalOpen:     reports.filter(function (r) { return r.status !== 'resolved'; }).length,
-    timestamp:     new Date().toISOString()
-  });
 });
 
 module.exports = router;

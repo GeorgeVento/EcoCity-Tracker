@@ -1,120 +1,153 @@
-/* api/reports.js — CRUD αναφορών */
+/* api/reports.js — CRUD αναφορών (MySQL) */
 'use strict';
 
-const express = require('express');
-const path    = require('path');
-const fs      = require('fs');
+const express  = require('express');
+const { pool } = require('../database/db');
 const { verifyToken, optionalToken } = require('../middleware/auth.middleware');
 const municipalityGuard              = require('../middleware/municipality.guard');
 
-const router       = express.Router();
-const REPORTS_FILE = path.join(__dirname, '..', 'data', 'reports.json');
+const router = express.Router();
 
-// ── Helpers ──────────────────────────────────────────────────
-function readReports() {
-  try { return JSON.parse(fs.readFileSync(REPORTS_FILE, 'utf8')); }
-  catch (e) { return []; }
-}
-function writeReports(reports) {
-  fs.writeFileSync(REPORTS_FILE, JSON.stringify(reports, null, 2), 'utf8');
-}
 function genId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
 }
 
+function rowToReport(r) {
+  return {
+    id:            r.id,
+    title:         r.title,
+    municipality:  r.municipality,
+    category:      r.category,
+    severity:      r.severity,
+    description:   r.description,
+    gpsLat:        r.gps_lat,
+    gpsLng:        r.gps_lng,
+    photo:         r.photo_path,
+    reporterName:  r.reporter_name,
+    reporterEmail: r.reporter_email,
+    status:        r.status,
+    userId:        r.user_id,
+    createdAt:     r.created_at,
+    updatedAt:     r.updated_at
+  };
+}
+
 // ── GET /api/reports ─────────────────────────────────────────
-// Query params: ?municipality=Αθήνα &status=pending &severity=critical
-router.get('/', optionalToken, function (req, res) {
-  var reports = readReports();
-  var { municipality, status, severity, limit } = req.query;
+router.get('/', optionalToken, async function (req, res) {
+  try {
+    var { municipality, status, severity, limit } = req.query;
+    var where  = [];
+    var params = [];
 
-  if (municipality && municipality !== 'all') {
-    reports = reports.filter(function (r) { return r.municipality === municipality; });
+    if (municipality && municipality !== 'all') { where.push('municipality = ?'); params.push(municipality); }
+    if (status)   { where.push('status = ?');   params.push(status);   }
+    if (severity) { where.push('severity = ?'); params.push(severity); }
+
+    var sql = 'SELECT * FROM reports';
+    if (where.length) sql += ' WHERE ' + where.join(' AND ');
+    sql += ' ORDER BY created_at DESC';
+    if (limit) { sql += ' LIMIT ?'; params.push(parseInt(limit, 10)); }
+
+    var [rows] = await pool.query(sql, params);
+    res.json({ success: true, count: rows.length, reports: rows.map(rowToReport) });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
   }
-  if (status)   reports = reports.filter(function (r) { return r.status   === status;   });
-  if (severity) reports = reports.filter(function (r) { return r.severity === severity; });
-
-  // Sort: newest first
-  reports.sort(function (a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
-
-  if (limit) reports = reports.slice(0, parseInt(limit, 10));
-
-  res.json({ success: true, count: reports.length, reports: reports });
 });
 
 // ── GET /api/reports/:id ─────────────────────────────────────
-router.get('/:id', function (req, res) {
-  var reports = readReports();
-  var report  = reports.find(function (r) { return r.id === req.params.id; });
-  if (!report) return res.status(404).json({ success: false, message: 'Αναφορά δεν βρέθηκε.' });
-  res.json({ success: true, report: report });
+router.get('/:id', async function (req, res) {
+  try {
+    var [rows] = await pool.query('SELECT * FROM reports WHERE id = ?', [req.params.id]);
+    if (rows.length === 0) return res.status(404).json({ success: false, message: 'Αναφορά δεν βρέθηκε.' });
+    res.json({ success: true, report: rowToReport(rows[0]) });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
+  }
 });
 
 // ── POST /api/reports ────────────────────────────────────────
-router.post('/', optionalToken, function (req, res) {
-  var { title, municipality, category, severity, description, gpsLat, gpsLng,
-        photo, reporterName, reporterEmail } = req.body;
+router.post('/', optionalToken, async function (req, res) {
+  try {
+    var { title, municipality, category, severity, description,
+          gpsLat, gpsLng, photo, reporterName, reporterEmail } = req.body;
 
-  if (!title || !municipality || !category || !severity || !description) {
-    return res.status(400).json({ success: false, message: 'Υποχρεωτικά πεδία λείπουν.' });
+    if (!title || !municipality || !category || !severity || !description) {
+      return res.status(400).json({ success: false, message: 'Υποχρεωτικά πεδία λείπουν.' });
+    }
+
+    var id = req.body.id || genId();
+
+    // Αποφυγή διπλότυπων (localStorage sync)
+    var [existing] = await pool.query('SELECT id FROM reports WHERE id = ?', [id]);
+    if (existing.length > 0) {
+      var [dup] = await pool.query('SELECT * FROM reports WHERE id = ?', [id]);
+      return res.status(201).json({ success: true, report: rowToReport(dup[0]) });
+    }
+
+    await pool.query(
+      `INSERT INTO reports
+         (id, title, municipality, category, severity, description,
+          gps_lat, gps_lng, photo_path, reporter_name, reporter_email, user_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        String(title).trim(),
+        String(municipality),
+        String(category),
+        ['low','medium','critical'].includes(severity) ? severity : 'low',
+        String(description).trim(),
+        gpsLat        || null,
+        gpsLng        || null,
+        photo         || null,
+        reporterName  ? String(reporterName).trim()  : '',
+        reporterEmail ? String(reporterEmail).trim() : '',
+        req.user ? req.user.id : null
+      ]
+    );
+
+    var [saved] = await pool.query('SELECT * FROM reports WHERE id = ?', [id]);
+    res.status(201).json({ success: true, report: rowToReport(saved[0]) });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
   }
-
-  var report = {
-    id:            req.body.id || genId(),
-    title:         String(title).trim(),
-    municipality:  String(municipality),
-    category:      String(category),
-    severity:      ['low','medium','critical'].includes(severity) ? severity : 'low',
-    description:   String(description).trim(),
-    gpsLat:        gpsLat   || null,
-    gpsLng:        gpsLng   || null,
-    photo:         photo    || null,
-    reporterName:  reporterName  ? String(reporterName).trim()  : '',
-    reporterEmail: reporterEmail ? String(reporterEmail).trim() : '',
-    status:        'pending',
-    createdAt:     new Date().toISOString(),
-    userId:        req.user ? req.user.id : null
-  };
-
-  var reports = readReports();
-  // Αποφυγή διπλότυπων αν η ίδια αναφορά έχει ήδη αποθηκευτεί (από localStorage sync)
-  if (!reports.find(function (r) { return r.id === report.id; })) {
-    reports.unshift(report);
-    writeReports(reports);
-  }
-
-  res.status(201).json({ success: true, report: report });
 });
 
 // ── PUT /api/reports/:id ─────────────────────────────────────
-// Ενημέρωση status (μόνο αρμόδιοι)
-router.put('/:id', verifyToken, municipalityGuard, function (req, res) {
-  var reports = readReports();
-  var idx     = reports.findIndex(function (r) { return r.id === req.params.id; });
+router.put('/:id', verifyToken, municipalityGuard, async function (req, res) {
+  try {
+    var [rows] = await pool.query('SELECT * FROM reports WHERE id = ?', [req.params.id]);
+    if (rows.length === 0) return res.status(404).json({ success: false, message: 'Αναφορά δεν βρέθηκε.' });
 
-  if (idx < 0) return res.status(404).json({ success: false, message: 'Αναφορά δεν βρέθηκε.' });
+    var allowed = ['pending', 'reviewed', 'resolved'];
+    if (req.body.status && !allowed.includes(req.body.status)) {
+      return res.status(400).json({ success: false, message: 'Μη έγκυρο status.' });
+    }
 
-  var allowed = ['pending', 'reviewed', 'resolved'];
-  if (req.body.status && !allowed.includes(req.body.status)) {
-    return res.status(400).json({ success: false, message: 'Μη έγκυρο status.' });
+    var newStatus = req.body.status || rows[0].status;
+    await pool.query(
+      'UPDATE reports SET status = ?, updated_at = NOW() WHERE id = ?',
+      [newStatus, req.params.id]
+    );
+
+    var [updated] = await pool.query('SELECT * FROM reports WHERE id = ?', [req.params.id]);
+    res.json({ success: true, report: rowToReport(updated[0]) });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
   }
-
-  if (req.body.status) reports[idx].status = req.body.status;
-  reports[idx].updatedAt = new Date().toISOString();
-  writeReports(reports);
-
-  res.json({ success: true, report: reports[idx] });
 });
 
 // ── DELETE /api/reports/:id ──────────────────────────────────
-router.delete('/:id', verifyToken, function (req, res) {
-  var reports = readReports();
-  var newList = reports.filter(function (r) { return r.id !== req.params.id; });
-  if (newList.length === reports.length) {
-    return res.status(404).json({ success: false, message: 'Αναφορά δεν βρέθηκε.' });
+router.delete('/:id', verifyToken, async function (req, res) {
+  try {
+    var [result] = await pool.query('DELETE FROM reports WHERE id = ?', [req.params.id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Αναφορά δεν βρέθηκε.' });
+    }
+    res.json({ success: true, message: 'Αναφορά διαγράφηκε.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
   }
-  writeReports(newList);
-  res.json({ success: true, message: 'Αναφορά διαγράφηκε.' });
 });
 
 module.exports = router;

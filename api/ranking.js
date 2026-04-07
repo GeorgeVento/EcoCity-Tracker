@@ -1,26 +1,11 @@
-/* api/ranking.js — Κατάταξη δήμων βάσει ποσοστού επίλυσης */
+/* api/ranking.js — Κατάταξη δήμων βάσει ποσοστού επίλυσης (MySQL) */
 'use strict';
 
-const express = require('express');
-const path    = require('path');
-const fs      = require('fs');
+const express  = require('express');
+const { pool } = require('../database/db');
 
-const router       = express.Router();
-const REPORTS_FILE = path.join(__dirname, '..', 'data', 'reports.json');
-const MUNIS_FILE   = path.join(__dirname, '..', 'data', 'municipalities.json');
+const router = express.Router();
 
-function readReports() {
-  try { return JSON.parse(fs.readFileSync(REPORTS_FILE, 'utf8')); } catch (e) { return []; }
-}
-function readMunicipalities() {
-  try { return JSON.parse(fs.readFileSync(MUNIS_FILE, 'utf8')); }
-  catch (e) {
-    return ['Αθήνα','Πειραιάς','Αιγάλεω','Νίκαια','Περιστέρι',
-            'Χαλάνδρι','Γλυφάδα','Καλλιθέα','Ηλιούπολη','Μαρούσι','Κηφισιά','Παλαιό Φάληρο'];
-  }
-}
-
-// Fallback ποσοστά (όταν δεν υπάρχουν αναφορές)
 var FALLBACK = {
   'Μαρούσι': 94, 'Γλυφάδα': 91, 'Κηφισιά': 88, 'Χαλάνδρι': 85,
   'Αθήνα': 82, 'Παλαιό Φάληρο': 79, 'Καλλιθέα': 77, 'Πειραιάς': 74,
@@ -28,32 +13,43 @@ var FALLBACK = {
 };
 
 // ── GET /api/ranking ─────────────────────────────────────────
-router.get('/', function (req, res) {
-  var reports = readReports();
-  var munis   = readMunicipalities();
+router.get('/', async function (_req, res) {
+  try {
+    var [muniRows] = await pool.query('SELECT name FROM municipalities ORDER BY name');
+    var munis = muniRows.map(function (r) { return r.name; });
 
-  var ranking = munis.map(function (muni) {
-    var muniReports = reports.filter(function (r) { return r.municipality === muni; });
+    var [statsRows] = await pool.query(`
+      SELECT
+        municipality,
+        COUNT(*) AS total,
+        SUM(status = 'resolved') AS resolved,
+        SUM(status = 'pending')  AS pending
+      FROM reports
+      GROUP BY municipality
+    `);
 
-    if (muniReports.length === 0) {
-      return { name: muni, total: 0, resolved: 0, pending: 0, rate: FALLBACK[muni] || 50 };
-    }
+    var statsMap = {};
+    statsRows.forEach(function (r) { statsMap[r.municipality] = r; });
 
-    var resolved = muniReports.filter(function (r) { return r.status === 'resolved'; }).length;
-    var pending  = muniReports.filter(function (r) { return r.status === 'pending';  }).length;
-    return {
-      name:     muni,
-      total:    muniReports.length,
-      resolved: resolved,
-      pending:  pending,
-      rate:     Math.round((resolved / muniReports.length) * 100)
-    };
-  });
+    var ranking = munis.map(function (muni) {
+      var s = statsMap[muni];
+      if (!s || s.total === 0) {
+        return { name: muni, total: 0, resolved: 0, pending: 0, rate: FALLBACK[muni] || 50 };
+      }
+      return {
+        name:     muni,
+        total:    s.total,
+        resolved: s.resolved,
+        pending:  s.pending,
+        rate:     Math.round((s.resolved / s.total) * 100)
+      };
+    });
 
-  // Ταξινόμηση: υψηλότερο ποσοστό πρώτο
-  ranking.sort(function (a, b) { return b.rate - a.rate; });
-
-  res.json({ success: true, ranking: ranking });
+    ranking.sort(function (a, b) { return b.rate - a.rate; });
+    res.json({ success: true, ranking: ranking });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Σφάλμα διακομιστή.' });
+  }
 });
 
 module.exports = router;
