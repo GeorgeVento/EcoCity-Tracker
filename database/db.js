@@ -39,9 +39,13 @@ async function initDB() {
 
   // Ασφαλής προσθήκη στηλών αν η users υπάρχει ήδη χωρίς αυτές
   var newCols = [
+    "ALTER TABLE users ADD COLUMN username VARCHAR(100) UNIQUE",
+    "ALTER TABLE users ADD COLUMN password VARCHAR(255)",
     "ALTER TABLE users ADD COLUMN is_verified TINYINT(1) DEFAULT 0",
     "ALTER TABLE users ADD COLUMN verification_token VARCHAR(100)",
-    "ALTER TABLE users ADD COLUMN token_expires_at DATETIME"
+    "ALTER TABLE users ADD COLUMN token_expires_at DATETIME",
+    "ALTER TABLE users ADD COLUMN reset_token VARCHAR(100)",
+    "ALTER TABLE users ADD COLUMN reset_expires_at DATETIME"
   ];
   for (var sql of newCols) {
     try { await pool.query(sql); } catch (e) { /* στήλη υπάρχει ήδη */ }
@@ -79,6 +83,21 @@ async function initDB() {
       INDEX idx_municipality (municipality),
       INDEX idx_status       (status),
       INDEX idx_created      (created_at)
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS municipality_change_requests (
+      id               INT AUTO_INCREMENT PRIMARY KEY,
+      user_id          INT NOT NULL,
+      old_municipality VARCHAR(100) NOT NULL,
+      new_municipality VARCHAR(100) NOT NULL,
+      status           ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+      requested_at     DATETIME     DEFAULT CURRENT_TIMESTAMP,
+      reviewed_at      DATETIME,
+      reviewed_by      INT,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (reviewed_by) REFERENCES officials(id)
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
   `);
 

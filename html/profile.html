@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Προφίλ — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="../index.html" class="nav-logo">
+        <span class="logo-leaf">🌿</span>
+        <span class="logo-text">EcoCity</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="auth.html" class="nav-link nav-citizen">Πολίτες</a></li>
+        <li><a href="official-login.html" class="nav-link nav-admin">Αρμόδιοι</a></li>
+      </ul>
+      <div class="nav-user" id="navUser">
+        <div class="nav-user-menu" id="navUserMenu" style="display:none;">
+          <button class="nav-user-btn" id="navUserBtn">
+            <span id="navUserIcon">👤</span>
+            <span id="navUserName">Χρήστης</span>
+          </button>
+          <div class="nav-dropdown" id="navDropdown" style="display:none;">
+            <div class="nav-dropdown-info" id="navUserInfo">
+              <div class="nav-info-name" id="navInfoName">Χρήστης</div>
+              <div class="nav-info-email" id="navInfoEmail">user@example.com</div>
+            </div>
+            <hr class="nav-divider">
+            <a href="#" id="navProfile">👤 Προφίλ</a>
+            <a href="forgot-password.html" id="navChangePassword">🔑 Αλλαγή Κωδικού</a>
+            <a href="#" id="navReports" style="display:none;">📋 Οι Αναφορές μου</a>
+            <a href="#" id="navDashboard" style="display:none;">🏛 Πίνακας Δήμου</a>
+            <hr class="nav-divider">
+            <a href="#" id="navLogout" class="nav-logout">🚪 Αποσύνδεση</a>
+          </div>
+        </div>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>👤 Το Προφίλ μου</h1>
+    <p>Δες και επεξεργάσου τις πληροφορίες σου.</p>
+  </section>
+
+  <section class="form-section">
+    <div class="container">
+      <div class="form-card" style="max-width:600px;">
+
+        <form id="profileForm" novalidate>
+
+          <div class="form-grid">
+
+            <div class="form-group full" id="grpFullName">
+              <label class="form-label" for="profFullName">Ονοματεπώνυμο <span class="required">*</span></label>
+              <input class="form-input" type="text" id="profFullName" name="fullName"
+                     placeholder="π.χ. Γιώργος Παπαδόπουλος" autocomplete="name" />
+              <span class="form-error">Το ονοματεπώνυμο είναι υποχρεωτικό.</span>
+            </div>
+
+            <div class="form-group full" id="grpUsername">
+              <label class="form-label" for="profUsername">Username <span class="required">*</span></label>
+              <input class="form-input" type="text" id="profUsername" name="username"
+                     placeholder="Το username σου" autocomplete="username" />
+              <span class="form-error">Το username είναι υποχρεωτικό και πρέπει να είναι μοναδικό.</span>
+            </div>
+
+            <div class="form-group" id="grpEmail">
+              <label class="form-label" for="profEmail">Email <span class="required">*</span></label>
+              <input class="form-input" type="email" id="profEmail" name="email"
+                     placeholder="you@example.com" autocomplete="email" readonly />
+              <span class="form-error">Εισάγαγε έγκυρο email.</span>
+            </div>
+
+            <div class="form-group" id="grpMunicipality">
+              <label class="form-label" for="profMunicipality">Δήμος κατοικίας <span class="required">*</span></label>
+              <select class="form-select" id="profMunicipality" name="homeMunicipality">
+                <option value="">— Επέλεξε δήμο —</option>
+                <option>Αθήνα</option>
+                <option>Πειραιάς</option>
+                <option>Αιγάλεω</option>
+                <option>Νίκαια</option>
+                <option>Περιστέρι</option>
+                <option>Χαλάνδρι</option>
+                <option>Γλυφάδα</option>
+                <option>Καλλιθέα</option>
+                <option>Ηλιούπολη</option>
+                <option>Μαρούσι</option>
+                <option>Κηφισιά</option>
+                <option>Παλαιό Φάληρο</option>
+              </select>
+              <span class="form-error">Επέλεξε δήμο.</span>
+            </div>
+
+          </div>
+
+          <div class="form-submit-bar">
+            <button type="submit" class="btn btn-green" id="saveBtn">
+              <span id="saveBtnText">Αποθήκευση</span>
+              <span id="saveBtnSpinner" style="display:none">⏳ Αποθήκευση...</span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <div id="toastContainer"></div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Nav user management
+    function initNavUser() {
+      var user = null;
+      try { user = JSON.parse(localStorage.getItem('ecocity_user') || 'null'); } catch (e) {}
+      var official = null;
+      try { official = JSON.parse(localStorage.getItem('ecocity_official') || 'null'); } catch (e) {}
+
+      var navUserMenu = document.getElementById('navUserMenu');
+      var navUserName = document.getElementById('navUserName');
+      var navDropdown = document.getElementById('navDropdown');
+      var navUserBtn = document.getElementById('navUserBtn');
+
+      if (user || official) {
+        // Logged in
+        navUserMenu.style.display = 'flex';
+        var currentUser = user || official;
+        navUserName.textContent = currentUser.fullName || currentUser.username || 'Χρήστης';
+        if (official) navUserName.textContent += ' (Αρμόδιος)';
+
+        // Fill dropdown info
+        document.getElementById('navInfoName').textContent = currentUser.fullName || currentUser.username || 'Χρήστης';
+        document.getElementById('navInfoEmail').textContent = currentUser.email || '';
+
+        // Show/hide links based on user type
+        if (user) {
+          document.getElementById('navReports').style.display = 'block';
+          document.getElementById('navDashboard').style.display = 'none';
+        } else if (official) {
+          document.getElementById('navReports').style.display = 'none';
+          document.getElementById('navDashboard').style.display = 'block';
+        }
+
+        // Dropdown toggle
+        navUserBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          navDropdown.style.display = navDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', function(e) {
+          if (!navUserMenu.contains(e.target)) {
+            navDropdown.style.display = 'none';
+          }
+        });
+
+        // Logout
+        document.getElementById('navLogout').addEventListener('click', function(e) {
+          e.preventDefault();
+          try { localStorage.removeItem('ecocity_user'); localStorage.removeItem('ecocity_official'); } catch (e) {}
+          location.reload();
+        });
+
+        // Profile
+        document.getElementById('navProfile').addEventListener('click', function(e) {
+          e.preventDefault();
+          // Already on profile page
+        });
+
+        // Reports
+        document.getElementById('navReports').addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = 'my-reports.html';
+        });
+
+        // Dashboard
+        document.getElementById('navDashboard').addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = 'official-dashboard.html';
+        });
+
+      } else {
+        // Not logged in
+        navUserMenu.style.display = 'none';
+      }
+    }
+
+    initNavUser();
+
+    // Profile management
+    var currentUser = null;
+    try { currentUser = JSON.parse(localStorage.getItem('ecocity_user') || 'null'); } catch (e) {}
+    if (!currentUser) {
+      window.location.href = 'auth.html';
+      // Redirect to login
+    }
+
+    // Load profile data
+    document.getElementById('profFullName').value = currentUser.fullName || '';
+    document.getElementById('profUsername').value = currentUser.username || '';
+    document.getElementById('profEmail').value = currentUser.email || '';
+    document.getElementById('profMunicipality').value = currentUser.homeMunicipality || '';
+
+    // Check for pending municipality change request
+    fetch('/api/auth/municipality-change-requests?userId=' + currentUser.id, {
+      headers: { 'Authorization': 'Bearer ' + (currentUser.token || '') }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success && data.requests && data.requests.length > 0) {
+        var pendingRequest = data.requests.find(function(req) { return req.status === 'pending'; });
+        if (pendingRequest) {
+          document.getElementById('profMunicipality').disabled = true;
+          document.getElementById('grpMunicipality').insertAdjacentHTML('beforeend', '<div class="form-note">Υπάρχει εκκρεμής αίτηση αλλαγής δήμου σε: ' + pendingRequest.newMunicipality + '</div>');
+        }
+      }
+    })
+    .catch(function() {
+      // Ignore errors
+    });
+
+    // Form validation and submit
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function setError(groupId, show) {
+      var el = document.getElementById(groupId);
+      if (!el) return;
+      if (show) el.classList.add('has-error');
+      else      el.classList.remove('has-error');
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var fullName = document.getElementById('profFullName').value.trim();
+      var username = document.getElementById('profUsername').value.trim();
+      var email = document.getElementById('profEmail').value.trim();
+      var homeMunicipality = document.getElementById('profMunicipality').value;
+      var valid = true;
+
+      if (fullName === '') { setError('grpFullName', true); valid = false; } else { setError('grpFullName', false); }
+      if (username.length < 3) { setError('grpUsername', true); valid = false; } else { setError('grpUsername', false); }
+      if (!emailRegex.test(email)) { setError('grpEmail', true); valid = false; } else { setError('grpEmail', false); }
+      if (homeMunicipality === '') { setError('grpMunicipality', true); valid = false; } else { setError('grpMunicipality', false); }
+
+      if (!valid) return;
+
+      var saveBtnText = document.getElementById('saveBtnText');
+      var saveBtnSpinner = document.getElementById('saveBtnSpinner');
+      saveBtnText.style.display = 'none';
+      saveBtnSpinner.style.display = 'inline';
+
+      fetch('/api/auth/citizen/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUser.id, fullName: fullName, username: username, homeMunicipality: homeMunicipality })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success) {
+          // Update localStorage
+          currentUser.fullName = fullName;
+          currentUser.username = username;
+          currentUser.homeMunicipality = homeMunicipality;
+          try { localStorage.setItem('ecocity_user', JSON.stringify(currentUser)); } catch (e) {}
+
+          showToast('Το προφίλ ενημερώθηκε!', 'success');
+          initNavUser(); // Refresh nav
+        } else {
+          showToast(data.message || 'Σφάλμα ενημέρωσης.', 'error');
+        }
+        saveBtnText.style.display = 'inline';
+        saveBtnSpinner.style.display = 'none';
+      })
+      .catch(function() {
+        showToast('Σφάλμα σύνδεσης.', 'error');
+        saveBtnText.style.display = 'inline';
+        saveBtnSpinner.style.display = 'none';
+      });
+    });
+
+    function showToast(message, type) {
+      type = type || 'success';
+      var toast = document.createElement('div');
+      toast.className = 'toast toast-' + type;
+      toast.textContent = message;
+      document.getElementById('toastContainer').appendChild(toast);
+      setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

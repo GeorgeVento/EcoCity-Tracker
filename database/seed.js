@@ -31,30 +31,39 @@ const OFFICIALS_RAW = [
 
   // ── Νίκαια ────────────────────────────────────────────────
   { username: 'official_nikaia',       password: 'N1k@1a!2026',      municipality: 'Νίκαια',          fullName: 'Δημήτρης Νικαιέας' },
+  { username: 'official_nikaia_2',     password: 'N1k@1a#2026$',     municipality: 'Νίκαια',          fullName: 'Ευαγγελία Νικαιώτη' },
 
   // ── Περιστέρι ─────────────────────────────────────────────
   { username: 'official_peristeri',    password: 'P3r1st3r1!2026',   municipality: 'Περιστέρι',       fullName: 'Αντώνης Περιστεριώτης' },
+  { username: 'official_peristeri_2',  password: 'P3r1st3r1#2026$',  municipality: 'Περιστέρι',       fullName: 'Μαίρη Περιστεριώτη' },
 
   // ── Χαλάνδρι ─────────────────────────────────────────────
   { username: 'official_chalandri',    password: 'Ch@l@ndr1!2026',   municipality: 'Χαλάνδρι',        fullName: 'Ιωάννης Χαλανδριώτης' },
+  { username: 'official_chalandri_2',  password: 'Ch@l@ndr1#2026$',  municipality: 'Χαλάνδρι',        fullName: 'Σοφία Χαλανδριώτη' },
 
   // ── Γλυφάδα ───────────────────────────────────────────────
   { username: 'official_glyfada',      password: 'Glyf@d@!2026',     municipality: 'Γλυφάδα',         fullName: 'Χρήστος Παραλιώτης' },
+  { username: 'official_glyfada_2',    password: 'Glyf@d@#2026$',    municipality: 'Γλυφάδα',         fullName: 'Αναστασία Παραλιώτη' },
 
   // ── Καλλιθέα ─────────────────────────────────────────────
   { username: 'official_kallithea',    password: 'K@ll1th3@!2026',   municipality: 'Καλλιθέα',        fullName: 'Βασιλική Καλλιθεάτη' },
+  { username: 'official_kallithea_2',  password: 'K@ll1th3@#2026$',  municipality: 'Καλλιθέα',        fullName: 'Γιώργος Καλλιθεάτης' },
 
   // ── Ηλιούπολη ────────────────────────────────────────────
   { username: 'official_ilioupoli',    password: 'Il1up0l1!2026',    municipality: 'Ηλιούπολη',       fullName: 'Παναγιώτης Ηλιουπολίτης' },
+  { username: 'official_ilioupoli_2',  password: 'Il1up0l1#2026$',   municipality: 'Ηλιούπολη',       fullName: 'Ελένη Ηλιουπολίτη' },
 
   // ── Μαρούσι ───────────────────────────────────────────────
   { username: 'official_maroussi',     password: 'M@r0uss1!2026',    municipality: 'Μαρούσι',         fullName: 'Αλέξανδρος Μαρουσιώτης' },
+  { username: 'official_maroussi_2',   password: 'M@r0uss1#2026$',   municipality: 'Μαρούσι',         fullName: 'Δέσποινα Μαρουσιώτη' },
 
   // ── Κηφισιά ───────────────────────────────────────────────
   { username: 'official_kifissia',     password: 'K1f1ss1@!2026',    municipality: 'Κηφισιά',         fullName: 'Θεοδώρα Κηφισιώτη' },
+  { username: 'official_kifissia_2',   password: 'K1f1ss1@#2026$',   municipality: 'Κηφισιά',         fullName: 'Νίκος Κηφισιώτης' },
 
   // ── Παλαιό Φάληρο ────────────────────────────────────────
-  { username: 'official_palaiofaliro', password: 'P@l@i0F@l!2026',   municipality: 'Παλαιό Φάληρο',  fullName: 'Σταύρος Φαληριώτης' }
+  { username: 'official_palaiofaliro', password: 'P@l@i0F@l!2026',   municipality: 'Παλαιό Φάληρο',  fullName: 'Σταύρος Φαληριώτης' },
+  { username: 'official_palaiofaliro_2', password: 'P@l@i0F@l#2026$', municipality: 'Παλαιό Φάληρο',  fullName: 'Μαρία Φαληριώτη' }
 ];
 
 async function seed() {

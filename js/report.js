@@ -148,6 +148,7 @@
       photo:         photoBase64 || null,
       reporterName:  document.getElementById('reporterName').value.trim(),
       reporterEmail: document.getElementById('reporterEmail').value.trim(),
+      userId:        currentUser ? currentUser.id : null,
       status:        'pending',
       createdAt:     new Date().toISOString()
     };

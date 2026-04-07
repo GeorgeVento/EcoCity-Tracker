@@ -106,6 +106,7 @@ function initDashboard() {
   // Load on page ready
   loadReports();
   loadCitizenCount();
+  loadChangeRequests();
 
   document.getElementById('btnRefresh').addEventListener('click', function () {
     loadReports();
@@ -143,6 +144,51 @@ function initDashboard() {
       .catch(function () {
         document.getElementById('statCitizens').textContent = '—';
       });
+  }
+
+  // ---- Fetch change requests ----
+  function loadChangeRequests() {
+    var tbody = document.getElementById('changeRequestsTableBody');
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-light);">⏳ Φόρτωση...</td></tr>';
+
+    fetch(API_BASE + '/auth/municipality-change-requests', {
+      headers: official.token ? { 'Authorization': 'Bearer ' + official.token } : {}
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.success) {
+          renderChangeRequestsTable(data.requests);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--status-critical);">⚠️ Σφάλμα φόρτωσης.</td></tr>';
+        }
+      })
+      .catch(function () {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--status-critical);">⚠️ Δεν ήταν δυνατή η φόρτωση.</td></tr>';
+      });
+  }
+
+  // ---- Render change requests table ----
+  function renderChangeRequestsTable(requests) {
+    var tbody = document.getElementById('changeRequestsTableBody');
+
+    if (requests.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-light);">Δεν υπάρχουν εκκρεμείς αιτήσεις.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = requests.map(function (r) {
+      return '<tr>' +
+        '<td>' + escHtml(r.userFullName) + ' (' + escHtml(r.userUsername) + ')</td>' +
+        '<td>' + escHtml(r.userEmail) + '</td>' +
+        '<td>' + escHtml(r.oldMunicipality) + '</td>' +
+        '<td>' + escHtml(r.newMunicipality) + '</td>' +
+        '<td>' + formatDate(r.requestedAt) + '</td>' +
+        '<td>' +
+          '<button class="btn btn-sm btn-success" onclick="window.approveRequest(' + r.id + ')">✅ Έγκριση</button> ' +
+          '<button class="btn btn-sm btn-danger" onclick="window.rejectRequest(' + r.id + ')">❌ Απόρριψη</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
   }
 
   // ---- Stats ----
@@ -245,12 +291,12 @@ function initDashboard() {
         modalRow('Κατηγορία', escHtml(r.category)) +
         modalRow('Σοβαρότητα', '<span class="badge-' + r.severity + '">' + severityLabel(r.severity) + '</span>') +
         modalRow('Status', statusLabel(r.status)) +
-        modalRow('Ημερομηνία', formatDate(r.created_at)) +
-        (r.reporter_name  ? modalRow('Αναφέρθηκε από', escHtml(r.reporter_name))  : '') +
-        (r.reporter_email ? modalRow('Email', escHtml(r.reporter_email)) : '') +
-        (r.gps_lat ? modalRow('GPS', r.gps_lat + ', ' + r.gps_lng) : '') +
+        modalRow('Ημερομηνία', formatDate(r.createdAt)) +
+        (r.reporterName  ? modalRow('Αναφέρθηκε από', escHtml(r.reporterName))  : '') +
+        (r.reporterEmail ? modalRow('Email', escHtml(r.reporterEmail)) : '') +
+        (r.gpsLat ? modalRow('GPS', r.gpsLat + ', ' + r.gpsLng) : '') +
         '<tr><td colspan="2" style="padding:12px 0;"><strong>Περιγραφή:</strong><br />' + escHtml(r.description) + '</td></tr>' +
-        (r.photo_url ? '<tr><td colspan="2" style="padding:8px 0;"><img src="' + escHtml(r.photo_url) + '" style="max-width:100%;border-radius:8px;" /></td></tr>' : '') +
+        (r.photo ? '<tr><td colspan="2" style="padding:8px 0;"><img src="' + escHtml(r.photo) + '" style="max-width:100%;border-radius:8px;" /></td></tr>' : '') +
       '</table>';
 
     var modal = document.getElementById('reportModal');
@@ -270,6 +316,104 @@ function initDashboard() {
       '<td style="padding:8px 0;">' + value + '</td>' +
     '</tr>';
   }
+
+  // Global functions for table actions
+  window.updateStatus = function (reportId, newStatus) {
+    fetch(API_BASE + '/reports/' + reportId, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + official.token
+      },
+      body: JSON.stringify({ status: newStatus })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.success) {
+          showToast('Status ενημερώθηκε!', 'success');
+          loadReports(); // Refresh
+        } else {
+          showToast('Σφάλμα ενημέρωσης.', 'error');
+        }
+      })
+      .catch(function () {
+        showToast('Σφάλμα δικτύου.', 'error');
+      });
+  };
+
+  window.viewReport = function (reportId) {
+    var report = allReports.find(function (r) { return r.id === reportId; });
+    if (!report) return;
+
+    document.getElementById('modalTitle').textContent = 'Αναφορά #' + report.id;
+    document.getElementById('modalBody').innerHTML =
+      '<table style="width:100%;border-collapse:collapse;">' +
+        modalRow('Τίτλος', escHtml(report.title)) +
+        modalRow('Δήμος', escHtml(report.municipality)) +
+        modalRow('Κατηγορία', escHtml(report.category)) +
+        modalRow('Σοβαρότητα', severityLabel(report.severity)) +
+        modalRow('Status', statusLabel(report.status)) +
+        modalRow('Ημερομηνία', formatDate(report.created_at)) +
+        modalRow('Αναφέρων', escHtml(report.reporterName || '—')) +
+        (report.reporterEmail ? modalRow('Email', escHtml(report.reporterEmail)) : '') +
+        (report.gpsLat ? modalRow('GPS', report.gpsLat + ', ' + report.gpsLng) : '') +
+        '<tr><td colspan="2" style="padding:12px 0;"><strong>Περιγραφή:</strong><br />' + escHtml(report.description) + '</td></tr>' +
+        (report.photo ? '<tr><td colspan="2" style="padding:8px 0;"><img src="' + escHtml(report.photo) + '" style="max-width:100%;border-radius:8px;" /></td></tr>' : '') +
+      '</table>';
+
+    var modal = document.getElementById('reportModal');
+    modal.style.display = 'flex';
+  };
+
+  window.approveRequest = function (requestId) {
+    if (!confirm('Είσαι σίγουρος ότι θέλεις να εγκρίνεις αυτή την αίτηση;')) return;
+
+    fetch(API_BASE + '/auth/municipality-change-requests/' + requestId, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + official.token
+      },
+      body: JSON.stringify({ action: 'approve' })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadChangeRequests(); // Refresh
+        } else {
+          showToast(data.message || 'Σφάλμα.', 'error');
+        }
+      })
+      .catch(function () {
+        showToast('Σφάλμα δικτύου.', 'error');
+      });
+  };
+
+  window.rejectRequest = function (requestId) {
+    if (!confirm('Είσαι σίγουρος ότι θέλεις να απορρίψεις αυτή την αίτηση;')) return;
+
+    fetch(API_BASE + '/auth/municipality-change-requests/' + requestId, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + official.token
+      },
+      body: JSON.stringify({ action: 'reject' })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadChangeRequests(); // Refresh
+        } else {
+          showToast(data.message || 'Σφάλμα.', 'error');
+        }
+      })
+      .catch(function () {
+        showToast('Σφάλμα δικτύου.', 'error');
+      });
+  };
 }
 
 // ===============================================================

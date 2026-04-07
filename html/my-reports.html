@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Οι Αναφορές μου — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="../index.html" class="nav-logo">
+        <span class="logo-leaf">🌿</span>
+        <span class="logo-text">EcoCity</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="auth.html" class="nav-link nav-citizen">Πολίτες</a></li>
+        <li><a href="official-login.html" class="nav-link nav-admin">Αρμόδιοι</a></li>
+      </ul>
+      <div class="nav-user" id="navUser">
+        <div class="nav-user-menu" id="navUserMenu" style="display:none;">
+          <button class="nav-user-btn" id="navUserBtn">
+            <span id="navUserIcon">👤</span>
+            <span id="navUserName">Χρήστης</span>
+          </button>
+          <div class="nav-dropdown" id="navDropdown" style="display:none;">
+            <div class="nav-dropdown-info" id="navUserInfo">
+              <div class="nav-info-name" id="navInfoName">Χρήστης</div>
+              <div class="nav-info-email" id="navInfoEmail">user@example.com</div>
+            </div>
+            <hr class="nav-divider">
+            <a href="profile.html" id="navProfile">👤 Προφίλ</a>
+            <a href="my-reports.html" id="navReports">📋 Οι Αναφορές μου</a>
+            <hr class="nav-divider">
+            <a href="#" id="navLogout" class="nav-logout">🚪 Αποσύνδεση</a>
+          </div>
+        </div>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>📋 Οι Αναφορές μου</h1>
+    <p>Δες όλες τις αναφορές που έχεις υποβάλει και την πρόοδό τους.</p>
+  </section>
+
+  <section class="form-section">
+    <div class="container">
+      <div class="reports-list" id="reportsList">
+        <!-- Reports will be loaded here -->
+        <div class="report-card skeleton"></div>
+        <div class="report-card skeleton"></div>
+        <div class="report-card skeleton"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <div id="toastContainer"></div>
+
+  <script>
+    // Nav user management
+    function initNavUser() {
+      var user = null;
+      try { user = JSON.parse(localStorage.getItem('ecocity_user') || 'null'); } catch (e) {}
+      var official = null;
+      try { official = JSON.parse(localStorage.getItem('ecocity_official') || 'null'); } catch (e) {}
+
+      var navUserMenu = document.getElementById('navUserMenu');
+      var navUserName = document.getElementById('navUserName');
+      var navDropdown = document.getElementById('navDropdown');
+      var navUserBtn = document.getElementById('navUserBtn');
+
+      if (user || official) {
+        // Logged in
+        navUserMenu.style.display = 'flex';
+        var currentUser = user || official;
+        navUserName.textContent = currentUser.fullName || currentUser.username || 'Χρήστης';
+        if (official) navUserName.textContent += ' (Αρμόδιος)';
+
+        // Fill dropdown info
+        document.getElementById('navInfoName').textContent = currentUser.fullName || currentUser.username || 'Χρήστης';
+        document.getElementById('navInfoEmail').textContent = currentUser.email || '';
+
+        // Dropdown toggle
+        navUserBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          navDropdown.style.display = navDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', function(e) {
+          if (!navUserMenu.contains(e.target)) {
+            navDropdown.style.display = 'none';
+          }
+        });
+
+        // Logout
+        document.getElementById('navLogout').addEventListener('click', function(e) {
+          e.preventDefault();
+          try { localStorage.removeItem('ecocity_user'); localStorage.removeItem('ecocity_official'); } catch (e) {}
+          location.reload();
+        });
+
+        // Profile
+        document.getElementById('navProfile').addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = 'profile.html';
+        });
+
+        // Reports
+        document.getElementById('navReports').addEventListener('click', function(e) {
+          e.preventDefault();
+          // Already on reports page
+        });
+
+      } else {
+        // Not logged in
+        navUserMenu.style.display = 'none';
+      }
+    }
+
+    initNavUser();
+
+    // Load user's reports
+    var currentUser = null;
+    try { currentUser = JSON.parse(localStorage.getItem('ecocity_user') || 'null'); } catch (e) {}
+    if (!currentUser) {
+      window.location.href = 'auth.html';
+      // Redirect to login
+    }
+
+    function loadMyReports() {
+      fetch('/api/reports?userId=' + currentUser.id, {
+        headers: currentUser.token ? { 'Authorization': 'Bearer ' + currentUser.token } : {}
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var container = document.getElementById('reportsList');
+        if (data.reports && data.reports.length > 0) {
+          container.innerHTML = data.reports.map(function(r) {
+            var statusText = r.status === 'pending' ? '⏳ Εκκρεμεί' : r.status === 'reviewed' ? '🔍 Υπό εξέταση' : '✅ Επιλύθηκε';
+            var severityText = r.severity === 'low' ? '🟢 Χαμηλή' : r.severity === 'medium' ? '🟡 Μέση' : '🔴 Κρίσιμη';
+            return '<div class="report-card">' +
+              '<div class="report-header">' +
+                '<h3>#' + r.id + ' — ' + (r.title || 'Αναφορά') + '</h3>' +
+                '<span class="report-status">' + statusText + '</span>' +
+              '</div>' +
+              '<div class="report-meta">' +
+                '<span>Κατηγορία: ' + (r.category || '—') + '</span>' +
+                '<span>Σοβαρότητα: ' + severityText + '</span>' +
+                '<span>Ημερομηνία: ' + new Date(r.createdAt).toLocaleDateString('el-GR') + '</span>' +
+              '</div>' +
+              '<p class="report-description">' + (r.description || '') + '</p>' +
+            '</div>';
+          }).join('');
+        } else {
+          container.innerHTML = '<div class="report-card"><p>Δεν έχεις υποβάλει ακόμα αναφορές.</p></div>';
+        }
+      })
+      .catch(function() {
+        document.getElementById('reportsList').innerHTML = '<div class="report-card"><p>Σφάλμα φόρτωσης αναφορών.</p></div>';
+      });
+    }
+
+    loadMyReports();
+  </script>
+</body>
+</html>

@@ -35,13 +35,14 @@ function rowToReport(r) {
 // ── GET /api/reports ─────────────────────────────────────────
 router.get('/', optionalToken, async function (req, res) {
   try {
-    var { municipality, status, severity, limit } = req.query;
+    var { municipality, status, severity, limit, userId } = req.query;
     var where  = [];
     var params = [];
 
     if (municipality && municipality !== 'all') { where.push('municipality = ?'); params.push(municipality); }
     if (status)   { where.push('status = ?');   params.push(status);   }
     if (severity) { where.push('severity = ?'); params.push(severity); }
+    if (userId)   { where.push('user_id = ?');  params.push(userId);   }
 
     var sql = 'SELECT * FROM reports';
     if (where.length) sql += ' WHERE ' + where.join(' AND ');
@@ -70,7 +71,7 @@ router.get('/:id', async function (req, res) {
 router.post('/', optionalToken, async function (req, res) {
   try {
     var { title, municipality, category, severity, description,
-          gpsLat, gpsLng, photo, reporterName, reporterEmail } = req.body;
+          gpsLat, gpsLng, photo, reporterName, reporterEmail, userId } = req.body;
 
     if (!title || !municipality || !category || !severity || !description) {
       return res.status(400).json({ success: false, message: 'Υποχρεωτικά πεδία λείπουν.' });
@@ -83,6 +84,19 @@ router.post('/', optionalToken, async function (req, res) {
     if (existing.length > 0) {
       var [dup] = await pool.query('SELECT * FROM reports WHERE id = ?', [id]);
       return res.status(201).json({ success: true, report: rowToReport(dup[0]) });
+    }
+
+    var reporterNameToUse = reporterName;
+    var reporterEmailToUse = reporterEmail;
+    var userIdToUse = req.user ? req.user.id : (userId ? parseInt(userId, 10) : null);
+
+    if (userIdToUse) {
+      // Αν είναι logged in ή έχει userId, πάρε username από βάση
+      var [userRows] = await pool.query('SELECT username FROM users WHERE id = ?', [userIdToUse]);
+      if (userRows.length > 0) {
+        reporterNameToUse = userRows[0].username;
+        reporterEmailToUse = ''; // Μην εμφανίζεις email για προστασία
+      }
     }
 
     await pool.query(
@@ -100,9 +114,9 @@ router.post('/', optionalToken, async function (req, res) {
         gpsLat        || null,
         gpsLng        || null,
         photo         || null,
-        reporterName  ? String(reporterName).trim()  : '',
-        reporterEmail ? String(reporterEmail).trim() : '',
-        req.user ? req.user.id : null
+        reporterNameToUse ? String(reporterNameToUse).trim()  : '',
+        reporterEmailToUse ? String(reporterEmailToUse).trim() : '',
+        userIdToUse
       ]
     );
 

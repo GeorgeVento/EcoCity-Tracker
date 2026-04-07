@@ -22,6 +22,26 @@
         <li><a href="auth.html" class="nav-link nav-citizen">Πολίτες</a></li>
         <li><a href="official-login.html" class="nav-link nav-admin">Αρμόδιοι</a></li>
       </ul>
+      <div class="nav-user" id="navUser">
+        <div class="nav-user-menu" id="navUserMenu" style="display:none;">
+          <button class="nav-user-btn" id="navUserBtn">
+            <span id="navUserIcon">👤</span>
+            <span id="navUserName">Χρήστης</span>
+          </button>
+          <div class="nav-dropdown" id="navDropdown" style="display:none;">
+            <div class="nav-dropdown-info" id="navUserInfo">
+              <div class="nav-info-name" id="navInfoName">Χρήστης</div>
+              <div class="nav-info-email" id="navInfoEmail">user@example.com</div>
+            </div>
+            <hr class="nav-divider">
+            <a href="profile.html" id="navProfile">👤 Προφίλ</a>
+            <a href="my-reports.html" id="navReports" style="display:none;">📋 Οι Αναφορές μου</a>
+            <a href="official-dashboard.html" id="navDashboard" style="display:none;">🏛 Πίνακας Δήμου</a>
+            <hr class="nav-divider">
+            <a href="#" id="navLogout" class="nav-logout">🚪 Αποσύνδεση</a>
+          </div>
+        </div>
+      </div>
       <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
     </nav>
   </header>
@@ -57,5 +77,85 @@
   </footer>
 
   <script src="../js/ranking.js"></script>
+
+  <script>
+    // Nav user management
+    function initNavUser() {
+      var user = null;
+      try { user = JSON.parse(localStorage.getItem('ecocity_user') || 'null'); } catch (e) {}
+      var official = null;
+      try { official = JSON.parse(localStorage.getItem('ecocity_official') || 'null'); } catch (e) {}
+
+      var navUserMenu = document.getElementById('navUserMenu');
+      var navUserName = document.getElementById('navUserName');
+      var navDropdown = document.getElementById('navDropdown');
+      var navUserBtn = document.getElementById('navUserBtn');
+
+      if (user || official) {
+        // Logged in
+        navUserMenu.style.display = 'flex';
+        var currentUser = user || official;
+        navUserName.textContent = currentUser.fullName || currentUser.username || 'Χρήστης';
+        if (official) navUserName.textContent += ' (Αρμόδιος)';
+
+        // Fill dropdown info
+        document.getElementById('navInfoName').textContent = currentUser.fullName || currentUser.username || 'Χρήστης';
+        document.getElementById('navInfoEmail').textContent = currentUser.email || '';
+
+        // Show/hide links based on user type
+        if (user) {
+          document.getElementById('navReports').style.display = 'block';
+          document.getElementById('navDashboard').style.display = 'none';
+        } else if (official) {
+          document.getElementById('navReports').style.display = 'none';
+          document.getElementById('navDashboard').style.display = 'block';
+        }
+
+        // Dropdown toggle
+        navUserBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          navDropdown.style.display = navDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', function(e) {
+          if (!navUserMenu.contains(e.target)) {
+            navDropdown.style.display = 'none';
+          }
+        });
+
+        // Logout
+        document.getElementById('navLogout').addEventListener('click', function(e) {
+          e.preventDefault();
+          try { localStorage.removeItem('ecocity_user'); localStorage.removeItem('ecocity_official'); } catch (e) {}
+          location.reload();
+        });
+
+        // Profile
+        document.getElementById('navProfile').addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = 'profile.html';
+        });
+
+        // Reports
+        document.getElementById('navReports').addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = 'my-reports.html';
+        });
+
+        // Dashboard
+        document.getElementById('navDashboard').addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = 'official-dashboard.html';
+        });
+
+      } else {
+        // Not logged in
+        navUserMenu.style.display = 'none';
+      }
+    }
+
+    initNavUser();
+  </script>
 </body>
 </html>

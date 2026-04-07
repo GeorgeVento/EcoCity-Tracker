@@ -72,11 +72,17 @@
   }
 
   // --- Blur validation ---
-  document.getElementById('loginEmail').addEventListener('blur', function () {
-    setError('grpLoginEmail', !validateEmail(this.value));
+  document.getElementById('loginUsername').addEventListener('blur', function () {
+    setError('grpLoginUsername', this.value.trim() === '');
+  });
+  document.getElementById('loginPassword').addEventListener('blur', function () {
+    setError('grpLoginPassword', this.value === '');
   });
   document.getElementById('regFullName').addEventListener('blur', function () {
     setError('grpFullName', this.value.trim() === '');
+  });
+  document.getElementById('regUsername').addEventListener('blur', function () {
+    setError('grpUsername', this.value.trim().length < 3);
   });
   document.getElementById('regEmail').addEventListener('blur', function () {
     setError('grpRegEmail', !validateEmail(this.value));
@@ -91,6 +97,13 @@
   });
   document.getElementById('regMunicipality').addEventListener('blur', function () {
     setError('grpMunicipality', this.value === '');
+  });
+  document.getElementById('regPassword').addEventListener('blur', function () {
+    setError('grpRegPassword', this.value.length < 6);
+  });
+  document.getElementById('regPasswordConfirm').addEventListener('blur', function () {
+    var password = document.getElementById('regPassword').value;
+    setError('grpRegPasswordConfirm', this.value !== password);
   });
 
   // --- Session helper ---
@@ -110,20 +123,23 @@
   loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    var username = document.getElementById('loginUsername').value.trim();
+    var password = document.getElementById('loginPassword').value;
 
-    if (!validateEmail(email)) {
-      setError('grpLoginEmail', true);
+    if (!username || !password) {
+      setError('grpLoginUsername', !username);
+      setError('grpLoginPassword', !password);
       return;
     }
-    setError('grpLoginEmail', false);
+    setError('grpLoginUsername', false);
+    setError('grpLoginPassword', false);
 
     setBusy(loginForm, true);
 
     fetch('/api/auth/citizen/login', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email: email })
+      body:    JSON.stringify({ username: username, password: password })
     })
     .then(function (r) { return r.json(); })
     .then(function (data) {
@@ -155,14 +171,20 @@
     e.preventDefault();
 
     var fullName         = document.getElementById('regFullName').value.trim();
+    var username         = document.getElementById('regUsername').value.trim();
     var email            = document.getElementById('regEmail').value.trim().toLowerCase();
     var emailConfirm     = document.getElementById('regEmailConfirm').value.trim().toLowerCase();
+    var password         = document.getElementById('regPassword').value;
+    var passwordConfirm  = document.getElementById('regPasswordConfirm').value;
     var homeMunicipality = document.getElementById('regMunicipality').value;
     var valid            = true;
 
     if (fullName === '')             { setError('grpFullName',        true);  valid = false; } else { setError('grpFullName',        false); }
+    if (username.length < 3)         { setError('grpUsername',        true);  valid = false; } else { setError('grpUsername',        false); }
     if (!validateEmail(email))       { setError('grpRegEmail',        true);  valid = false; } else { setError('grpRegEmail',        false); }
     if (emailConfirm !== email)      { setError('grpRegEmailConfirm', true);  valid = false; } else { setError('grpRegEmailConfirm', false); }
+    if (password.length < 6)         { setError('grpRegPassword',     true);  valid = false; } else { setError('grpRegPassword',     false); }
+    if (passwordConfirm !== password){ setError('grpRegPasswordConfirm', true); valid = false; } else { setError('grpRegPasswordConfirm', false); }
     if (homeMunicipality === '')     { setError('grpMunicipality',    true);  valid = false; } else { setError('grpMunicipality',    false); }
 
     if (!valid) return;
@@ -172,7 +194,7 @@
     fetch('/api/auth/citizen/register', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ fullName: fullName, email: email, homeMunicipality: homeMunicipality })
+      body:    JSON.stringify({ fullName: fullName, username: username, email: email, password: password, homeMunicipality: homeMunicipality })
     })
     .then(function (r) { return r.json(); })
     .then(function (data) {

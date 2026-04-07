@@ -62,11 +62,18 @@
           <form id="loginForm" novalidate>
 
             <div class="form-grid">
-              <div class="form-group full" id="grpLoginEmail">
-                <label class="form-label" for="loginEmail">Email <span class="required">*</span></label>
-                <input class="form-input" type="email" id="loginEmail" name="email"
-                       placeholder="you@example.com" autocomplete="email" />
-                <span class="form-error">Εισάγαγε έγκυρο email.</span>
+              <div class="form-group full" id="grpLoginUsername">
+                <label class="form-label" for="loginUsername">Username <span class="required">*</span></label>
+                <input class="form-input" type="text" id="loginUsername" name="username"
+                       placeholder="Το username σου" autocomplete="username" />
+                <span class="form-error">Εισάγαγε το username σου.</span>
+              </div>
+
+              <div class="form-group full" id="grpLoginPassword">
+                <label class="form-label" for="loginPassword">Κωδικός <span class="required">*</span></label>
+                <input class="form-input" type="password" id="loginPassword" name="password"
+                       placeholder="Ο κωδικός σου" autocomplete="current-password" />
+                <span class="form-error">Εισάγαγε τον κωδικό σου.</span>
               </div>
             </div>
 
@@ -77,6 +84,11 @@
             <p style="margin-top:16px; font-size:.9rem; color:var(--text-mid); text-align:center;">
               Δεν έχεις λογαριασμό;
               <a href="#" id="switchToRegister" style="color:var(--primary); font-weight:600;">Εγγράψου εδώ</a>
+            </p>
+
+            <p style="margin-top:8px; font-size:.9rem; color:var(--text-mid); text-align:center;">
+              Ξέχασες τον κωδικό σου;
+              <a href="forgot-password.html" style="color:var(--primary); font-weight:600;">Επαναφορά κωδικού</a>
             </p>
 
           </form>
@@ -93,6 +105,27 @@
                 <input class="form-input" type="text" id="regFullName" name="fullName"
                        placeholder="π.χ. Γιώργος Παπαδόπουλος" autocomplete="name" />
                 <span class="form-error">Το ονοματεπώνυμο είναι υποχρεωτικό.</span>
+              </div>
+
+              <div class="form-group full" id="grpUsername">
+                <label class="form-label" for="regUsername">Username <span class="required">*</span></label>
+                <input class="form-input" type="text" id="regUsername" name="username"
+                       placeholder="Επέλεξε ένα μοναδικό username" autocomplete="username" />
+                <span class="form-error">Το username είναι υποχρεωτικό και πρέπει να είναι μοναδικό.</span>
+              </div>
+
+              <div class="form-group" id="grpRegPassword">
+                <label class="form-label" for="regPassword">Κωδικός <span class="required">*</span></label>
+                <input class="form-input" type="password" id="regPassword" name="password"
+                       placeholder="Επέλεξε κωδικό (τουλάχιστον 6 χαρακτήρες)" autocomplete="new-password" />
+                <span class="form-error">Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.</span>
+              </div>
+
+              <div class="form-group" id="grpRegPasswordConfirm">
+                <label class="form-label" for="regPasswordConfirm">Επιβεβαίωση Κωδικού <span class="required">*</span></label>
+                <input class="form-input" type="password" id="regPasswordConfirm" name="passwordConfirm"
+                       placeholder="Επιβεβαίωσε τον κωδικό" autocomplete="new-password" />
+                <span class="form-error">Οι κωδικοί δεν ταιριάζουν.</span>
               </div>
 
               <div class="form-group" id="grpRegEmail">
