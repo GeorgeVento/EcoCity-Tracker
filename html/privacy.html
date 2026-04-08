@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Πολιτική Απορρήτου & Άδεια Χρήσης — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    .privacy-section { padding: 56px 0 80px; }
+    .privacy-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 40px 48px;
+      max-width: 860px; margin: 0 auto; box-shadow: var(--shadow-sm);
+    }
+    .privacy-card h2 {
+      font-family: var(--font-display); font-size: 1.35rem;
+      color: var(--primary-dark); margin: 36px 0 12px;
+      padding-bottom: 8px; border-bottom: 2px solid var(--light-bg);
+    }
+    .privacy-card h2:first-of-type { margin-top: 0; }
+    .privacy-card p { color: var(--text-mid); line-height: 1.8; margin-bottom: 12px; font-size: .95rem; }
+    .privacy-card ul { margin: 0 0 16px 24px; }
+    .privacy-card ul li { color: var(--text-mid); line-height: 1.8; font-size: .95rem; margin-bottom: 6px; list-style: disc; }
+    .privacy-card strong { color: var(--text-dark); }
+    .badge-section {
+      display: inline-block; background: var(--light-bg);
+      border: 1px solid var(--secondary); border-radius: 8px;
+      padding: 6px 16px; font-size: .82rem; font-weight: 600;
+      color: var(--primary-dark); margin-bottom: 32px;
+    }
+    .license-box {
+      background: #1e1e1e; border-radius: var(--radius-sm);
+      padding: 20px 24px; font-family: monospace; font-size: .82rem;
+      color: #d4d4d4; white-space: pre-wrap; margin: 12px 0 20px; line-height: 1.7;
+    }
+    .contact-box {
+      background: #e3f2fd; border: 1px solid #90caf9;
+      border-radius: var(--radius-sm); padding: 16px 20px; margin-top: 12px; line-height: 1.9;
+    }
+    .contact-box a { color: var(--primary-dark); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="../index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="auth.html" class="nav-link nav-citizen">Πολίτες</a></li>
+        <li><a href="official-login.html" class="nav-link nav-admin">Αρμόδιοι</a></li>
+      </ul>
+      <div class="nav-user" id="navUser">
+        <div class="nav-user-menu" id="navUserMenu" style="display:none;">
+          <button class="nav-user-btn" id="navUserBtn">
+            <span id="navUserIcon">👤</span>
+            <span id="navUserName">Χρήστης</span>
+          </button>
+          <div class="nav-dropdown" id="navDropdown" style="display:none;">
+            <div class="nav-dropdown-info" id="navUserInfo">
+              <div class="nav-info-name" id="navInfoName">Χρήστης</div>
+              <div class="nav-info-email" id="navInfoEmail">user@example.com</div>
+            </div>
+            <hr class="nav-divider">
+            <a href="profile.html">👤 Προφίλ</a>
+            <a href="my-reports.html" id="navReports" style="display:none;">📋 Οι Αναφορές μου</a>
+            <hr class="nav-divider">
+            <a href="#" id="navLogout" class="nav-logout">🚪 Αποσύνδεση</a>
+          </div>
+        </div>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="page-hero">
+    <h1>Πολιτική Απορρήτου & Άδεια Χρήσης</h1>
+    <p>Πληροφορίες για τη χρήση δεδομένων, τα δικαιώματά σας και τους όρους της εφαρμογής</p>
+  </div>
+
+  <section class="privacy-section">
+    <div class="container">
+      <div class="privacy-card">
+
+        <span class="badge-section">📅 Τελευταία ενημέρωση: Απρίλιος 2026</span>
+
+        <h2>🏛️ Πνευματικά Δικαιώματα & Ιδιοκτησία</h2>
+        <p>
+          Το <strong>EcoCity Tracker</strong> είναι πρωτότυπο έργο λογισμικού που δημιουργήθηκε στο πλαίσιο
+          Διαθεματικής Εργασίας του <strong>ΣΑΕΚ ΑΙΓΑΛΕΩ</strong> (4ο Εξάμηνο, 2025–2026).
+        </p>
+        <p>
+          <strong>© 2026 Γιώργος-Λεωνίδας Βεντουράτος, Δήμος Χριστοδούλου, Γιώργος Παπαδάκης.</strong><br/>
+          Ο πηγαίος κώδικας, η σχεδίαση (UI/UX), τα γραφικά στοιχεία, η αρχιτεκτονική συστήματος και
+          η τεκμηρίωση αποτελούν πνευματική ιδιοκτησία της ομάδας. Απαγορεύεται η αντιγραφή ή εμπορική
+          χρήση χωρίς γραπτή άδεια.
+        </p>
+
+        <h2>📄 Άδεια Χρήσης — MIT License</h2>
+        <p>Ο κώδικας διατίθεται υπό την <strong>MIT License</strong> για εκπαιδευτικούς και μη-εμπορικούς σκοπούς:</p>
+        <div class="license-box">MIT License
+
+Copyright (c) 2026 Βεντουράτος, Χριστοδούλου, Παπαδάκης — ΣΑΕΚ ΑΙΓΑΛΕΩ
+
+Χορηγείται δωρεάν άδεια σε οποιοδήποτε πρόσωπο αποκτά αντίγραφο του
+λογισμικού να το χρησιμοποιεί, αντιγράφει, τροποποιεί, συγχωνεύει,
+δημοσιεύει, διανέμει και εκχωρεί άδεια χρήσης, υπό τον όρο ότι η
+παρούσα ανακοίνωση πνευματικών δικαιωμάτων συμπεριλαμβάνεται σε κάθε
+αντίγραφο ή ουσιαστικό τμήμα του λογισμικού.
+
+ΤΟ ΛΟΓΙΣΜΙΚΟ ΠΑΡΕΧΕΤΑΙ «ΩΣ ΕΧΕΙ», ΧΩΡΙΣ ΕΓΓΥΗΣΗ ΟΠΟΙΟΥΔΗΠΟΤΕ ΕΙΔΟΥΣ.</div>
+        <p>Για εμπορική χρήση απαιτείται γραπτή συγκατάθεση των δημιουργών.</p>
+
+        <h2>🔒 Πολιτική Απορρήτου</h2>
+        <p>
+          Η εφαρμογή EcoCity Tracker σέβεται την ιδιωτικότητα των χρηστών. Η παρούσα πολιτική
+          περιγράφει ποια δεδομένα συλλέγονται, πώς χρησιμοποιούνται και πώς προστατεύονται.
+        </p>
+
+        <h2>📋 Δεδομένα που Συλλέγουμε</h2>
+        <ul>
+          <li><strong>Στοιχεία λογαριασμού:</strong> Ονοματεπώνυμο, username, email, δήμος κατοικίας.</li>
+          <li><strong>Αναφορές:</strong> Τίτλος, περιγραφή, κατηγορία, σοβαρότητα, δήμος, GPS (εφόσον επιτραπεί), φωτογραφία (εφόσον επισυναφθεί).</li>
+          <li><strong>Τεχνικά δεδομένα:</strong> IP για rate limiting, ημερομηνία/ώρα υποβολής.</li>
+          <li><strong>Session:</strong> JWT token στο localStorage του browser για παραμονή συνδεδεμένου.</li>
+        </ul>
+
+        <h2>🎯 Σκοπός Χρήσης Δεδομένων</h2>
+        <ul>
+          <li>Διαχείριση λογαριασμού και αυθεντικοποίηση χρήστη.</li>
+          <li>Υποβολή και παρακολούθηση αναφορών περιβαλλοντικών προβλημάτων.</li>
+          <li>Παρουσίαση στατιστικών και κατάταξης δήμων (ανωνυμοποιημένα).</li>
+          <li>Επικοινωνία αρμόδιων δήμου με τον χρήστη για την αναφορά του.</li>
+          <li>Αποστολή email επιβεβαίωσης λογαριασμού και ανάκτησης κωδικού.</li>
+        </ul>
+
+        <h2>🚫 Τι ΔΕΝ Κάνουμε</h2>
+        <ul>
+          <li>Δεν πωλούμε ή μοιραζόμαστε προσωπικά δεδομένα με τρίτους.</li>
+          <li>Δεν χρησιμοποιούμε δεδομένα για διαφημιστικούς σκοπούς.</li>
+          <li>Δεν αποθηκεύουμε κωδικούς σε απλό κείμενο (χρησιμοποιούμε bcrypt hashing).</li>
+          <li>Δεν χρησιμοποιούμε cookies παρακολούθησης τρίτων.</li>
+        </ul>
+
+        <h2>📍 GPS & Τοποθεσία</h2>
+        <p>
+          Η εφαρμογή ζητά πρόσβαση στην τοποθεσία σας <strong>μόνο κατά την υποβολή αναφοράς</strong>
+          και μόνο εφόσον το επιτρέψετε. Μπορείτε να υποβάλετε αναφορά και χωρίς GPS.
+        </p>
+
+        <h2>🔐 Ασφάλεια Δεδομένων</h2>
+        <ul>
+          <li>Κωδικοί: κρυπτογραφημένοι με <strong>bcrypt</strong> (10 salt rounds).</li>
+          <li>Αυθεντικοποίηση: <strong>JWT tokens</strong> με λήξη 7 ημερών.</li>
+          <li>Βάση δεδομένων: <strong>parameterized queries</strong> για προστασία από SQL injection.</li>
+          <li>API: Rate limiting (100 req / 15 λεπτά ανά IP).</li>
+          <li>Uploads: έλεγχος MIME type, μέγιστο 5MB ανά αρχείο.</li>
+        </ul>
+
+        <h2>✅ Δικαιώματα Χρηστών</h2>
+        <ul>
+          <li><strong>Πρόσβαση:</strong> Δείτε τις αναφορές σας στη σελίδα «Οι Αναφορές μου».</li>
+          <li><strong>Διόρθωση:</strong> Επεξεργαστείτε τα στοιχεία σας στο προφίλ.</li>
+          <li><strong>Διαγραφή:</strong> Επικοινωνήστε μαζί μας για διαγραφή λογαριασμού εντός 30 ημερών.</li>
+          <li><strong>Φορητότητα:</strong> Οι αρμόδιοι δήμου μπορούν να εξάγουν αναφορές σε CSV.</li>
+        </ul>
+
+        <h2>🍪 Cookies & Local Storage</h2>
+        <p>
+          Χρησιμοποιούμε <strong>localStorage</strong> του browser (όχι HTTP cookies) μόνο για το session
+          token σύνδεσης. Δεν υπάρχουν cookies παρακολούθησης ή analytics τρίτων.
+        </p>
+
+        <h2>📞 Επικοινωνία</h2>
+        <div class="contact-box">
+          Για ερωτήματα σχετικά με τα δεδομένα σας ή για άσκηση δικαιωμάτων, επικοινωνήστε:<br/>
+          📧 <a href="mailto:g.l.ventouratos@gmail.com">g.l.ventouratos@gmail.com</a><br/>
+          🏫 ΣΑΕΚ ΑΙΓΑΛΕΩ — Βεντουράτος, Χριστοδούλου, Παπαδάκης
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span>
+        <a href="privacy.html" style="color:rgba(255,255,255,.8);text-decoration:underline;margin-right:12px;">🔒 Απόρρητο & Άδεια</a>
+        <a href="about.html" style="color:rgba(255,255,255,.8);text-decoration:underline;">About Us</a>
+      </span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <div id="toastContainer"></div>
+  <script src="../js/main.js"></script>
+</body>
+</html>
