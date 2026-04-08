@@ -101,6 +101,15 @@ async function initDB() {
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
   `);
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS municipality_interests (
+      id           INT AUTO_INCREMENT PRIMARY KEY,
+      name         VARCHAR(200) DEFAULT '',
+      municipality VARCHAR(200) NOT NULL,
+      submitted_at DATETIME     DEFAULT CURRENT_TIMESTAMP
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+  `);
+
   console.log('✅  Πίνακες MySQL έτοιμοι.');
 }
 
