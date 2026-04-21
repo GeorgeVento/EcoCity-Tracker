@@ -1,4 +1,73 @@
 /* js/main.js — Κοινές λειτουργίες: nav toggle, counters, πρόσφατες αναφορές */
+
+/* ── Shared Nav User Init ────────────────────────────────────── */
+window.initNavUser = function () {
+  var user = null, official = null;
+  try { user     = JSON.parse(localStorage.getItem('ecocity_user')     || 'null'); } catch (e) {}
+  try { official = JSON.parse(localStorage.getItem('ecocity_official') || 'null'); } catch (e) {}
+
+  var navLoginMenu = document.getElementById('navLoginMenu');
+  var navUserMenu  = document.getElementById('navUserMenu');
+  var navUserBtn   = document.getElementById('navUserBtn');
+  var navUserName  = document.getElementById('navUserName');
+  var navDropdown  = document.getElementById('navDropdown');
+
+  if (user || official) {
+    if (navLoginMenu) navLoginMenu.style.display = 'none';
+    if (navUserMenu) {
+      navUserMenu.style.display = 'flex';
+      var cu = user || official;
+      if (navUserName) navUserName.textContent = (cu.fullName || cu.username || 'Χρήστης') + (official ? ' (Αρμόδιος)' : '');
+      var infoName  = document.getElementById('navInfoName');
+      var infoEmail = document.getElementById('navInfoEmail');
+      if (infoName)  infoName.textContent  = cu.fullName || cu.username || 'Χρήστης';
+      if (infoEmail) infoEmail.textContent = cu.email || '';
+      var navReports   = document.getElementById('navReports');
+      var navDashboard = document.getElementById('navDashboard');
+      if (navReports)   navReports.style.display   = user     ? 'block' : 'none';
+      if (navDashboard) navDashboard.style.display = official ? 'block' : 'none';
+      if (navUserBtn && navDropdown) {
+        navUserBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          navDropdown.style.display = navDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+      }
+      document.addEventListener('click', function (e) {
+        if (navUserMenu && !navUserMenu.contains(e.target) && navDropdown) {
+          navDropdown.style.display = 'none';
+        }
+      });
+      var navLogout = document.getElementById('navLogout');
+      if (navLogout) navLogout.addEventListener('click', function (e) {
+        e.preventDefault();
+        try { localStorage.removeItem('ecocity_user'); localStorage.removeItem('ecocity_official'); } catch (e2) {}
+        location.reload();
+      });
+    }
+  } else {
+    if (navUserMenu)  navUserMenu.style.display = 'none';
+    if (navLoginMenu) {
+      navLoginMenu.style.display = 'flex';
+      var nlBtn  = document.getElementById('navLoginBtn');
+      var nlDrop = document.getElementById('navLoginDropdown');
+      if (nlBtn && nlDrop) {
+        nlBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var open = nlDrop.style.display === 'block';
+          nlDrop.style.display = open ? 'none' : 'block';
+          navLoginMenu.classList.toggle('open', !open);
+        });
+        document.addEventListener('click', function (e) {
+          if (!navLoginMenu.contains(e.target)) {
+            nlDrop.style.display = 'none';
+            navLoginMenu.classList.remove('open');
+          }
+        });
+      }
+    }
+  }
+};
+
 (function () {
   'use strict';
 
@@ -17,16 +86,22 @@
   // ── Mobile Nav Toggle ────────────────────────────────────────
   var toggle   = document.getElementById('navToggle');
   var navLinks = document.getElementById('navLinks');
-  if (toggle && navLinks) {
+  if (toggle && navLinks && !toggle.dataset.bound) {
+    toggle.dataset.bound = '1';
     toggle.addEventListener('click', function () {
       navLinks.classList.toggle('open');
+      toggle.classList.toggle('open');
     });
     document.addEventListener('click', function (e) {
       if (!toggle.contains(e.target) && !navLinks.contains(e.target)) {
         navLinks.classList.remove('open');
+        toggle.classList.remove('open');
       }
     });
   }
+
+  // ── Init Nav User ────────────────────────────────────────────
+  if (typeof window.initNavUser === 'function') window.initNavUser();
 
   // ── Counter Animation (index.html) ──────────────────────────
   var counters = document.querySelectorAll('.counter-number[data-target]');

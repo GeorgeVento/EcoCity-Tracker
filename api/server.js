@@ -14,8 +14,9 @@ const reportsRoutes       = require('./reports');
 const statsRoutes         = require('./stats');
 const rankingRoutes       = require('./ranking');
 const exportRoutes        = require('./export');
-const notificationsRoutes = require('./notifications');
-const interestsRoutes     = require('./interests');
+const notificationsRoutes        = require('./notifications');
+const interestsRoutes            = require('./interests');
+const municipalityRequestRoutes  = require('./municipality-request');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -41,7 +42,8 @@ app.use('/api/stats',         statsRoutes);
 app.use('/api/ranking',       rankingRoutes);
 app.use('/api/export',        exportRoutes);
 app.use('/api/notifications', notificationsRoutes);
-app.use('/api/interests',    interestsRoutes);
+app.use('/api/interests',             interestsRoutes);
+app.use('/api/municipality-request', municipalityRequestRoutes);
 
 app.get('/api/health', function (_req, res) {
   res.json({ status: 'ok', version: '1.0.0', time: new Date().toISOString() });

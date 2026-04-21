@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Βοήθεια — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <!-- ─── HEADER ─── -->
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="../index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-link">Αρχική</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><span class="nav-link active" id="navFaq" onclick="showTab('faq')" style="cursor:pointer;">Βοήθεια</span></li>
+      </ul>
+      <div class="nav-user" id="navUser">
+        <div class="nav-login-menu" id="navLoginMenu" style="display:none;">
+          <button class="nav-login-btn" id="navLoginBtn">
+            <span class="nav-login-icon">🔐</span>
+            <span class="nav-login-text">Σύνδεση</span>
+            <span class="nav-login-caret">▾</span>
+          </button>
+          <div class="nav-login-dropdown" id="navLoginDropdown" style="display:none;">
+            <a href="auth.html" class="nav-login-option">
+              <span class="nav-login-opt-icon">👤</span>
+              <div><div class="nav-opt-title">Πολίτης</div><div class="nav-opt-sub">Σύνδεση ή εγγραφή</div></div>
+            </a>
+            <hr class="nav-divider" style="margin:0;">
+            <a href="official-login.html" class="nav-login-option nav-login-official">
+              <span class="nav-login-opt-icon">🏛</span>
+              <div><div class="nav-opt-title">Αρμόδιος</div><div class="nav-opt-sub">Πρόσβαση δήμου</div></div>
+            </a>
+          </div>
+        </div>
+        <div class="nav-user-menu" id="navUserMenu" style="display:none;">
+          <button class="nav-user-btn" id="navUserBtn">
+            <span id="navUserIcon">👤</span>
+            <span id="navUserName">Χρήστης</span>
+          </button>
+          <div class="nav-dropdown" id="navDropdown" style="display:none;">
+            <div class="nav-dropdown-info" id="navUserInfo">
+              <div class="nav-info-name" id="navInfoName">Χρήστης</div>
+              <div class="nav-info-email" id="navInfoEmail">user@example.com</div>
+            </div>
+            <hr class="nav-divider">
+            <a href="profile.html" id="navProfile">👤 Προφίλ</a>
+            <a href="my-reports.html" id="navReports" style="display:none;">📋 Οι Αναφορές μου</a>
+            <a href="official-dashboard.html" id="navDashboard" style="display:none;">🏛 Πίνακας Δήμου</a>
+            <hr class="nav-divider">
+            <a href="#" id="navLogout" class="nav-logout">🚪 Αποσύνδεση</a>
+          </div>
+        </div>
+      </div>
+      <button class="nav-toggle" id="navToggle" onclick="toggleMobileNav()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ─── PAGE HERO ─── -->
+  <section class="page-hero">
+    <h1>❓ Βοηθητικό Κέντρο</h1>
+    <p>Απαντήσεις, live chat, και εγγραφή νέων δήμων στην πλατφόρμα.</p>
+  </section>
+
+  <!-- ─── MAIN ─── -->
+  <div class="container" style="padding-top:56px; padding-bottom:80px;">
+
+    <!-- TABS -->
+    <div class="cat-tabs">
+      <button class="cat-tab active" id="tab-faq" onclick="showTab('faq')">
+        <span class="cat-tab-icon">❓</span>
+        <span class="cat-tab-text">
+          Συχνές Ερωτήσεις
+          <span class="cat-tab-sub">Απαντήσεις στα πιο συχνά ερωτήματα</span>
+        </span>
+      </button>
+      <button class="cat-tab" id="tab-municipality" onclick="showTab('municipality')">
+        <span class="cat-tab-icon">🏛</span>
+        <span class="cat-tab-text">
+          Εγγραφή Δήμου
+          <span class="cat-tab-sub">Αίτηση για νέο δήμο-μέλος</span>
+        </span>
+      </button>
+      <button class="cat-tab" id="tab-report" onclick="handleChatTab()">
+        <span class="cat-tab-icon">💬</span>
+        <span class="cat-tab-text">
+          Live Chat
+          <span class="cat-tab-sub">Μιλήστε με την ομάδα υποστήριξης</span>
+        </span>
+      </button>
+    </div>
+
+    <!-- ── FAQ PANEL ── -->
+    <div class="panel active" id="panel-faq">
+      <div class="faq-list">
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Τι είναι το EcoCity Tracker; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Το EcoCity Tracker είναι μια ψηφιακή πλατφόρμα που επιτρέπει στους πολίτες να αναφέρουν
+            περιβαλλοντικά προβλήματα στην πόλη τους — παράνομες χωματερές, φθορές σε κοινόχρηστους χώρους,
+            ρύπανση και άλλα. Οι αναφορές αξιολογούνται από τις αρμόδιες υπηρεσίες και αντιμετωπίζονται άμεσα.
+          </div></div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Χρειάζομαι λογαριασμό για να υποβάλω αναφορά; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Ναι, απαιτείται σύνδεση για να υποβάλετε αναφορά. Η εγγραφή είναι <strong>δωρεάν και γρήγορη</strong>
+            — αρκεί ένα email και ένας κωδικός πρόσβασης.
+          </div></div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Πώς υποβάλω μια αναφορά; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Συνδεθείτε, πατήστε «Νέα Αναφορά» και συμπληρώστε τον τίτλο, κατηγορία, διεύθυνση και περιγραφή.
+            Μπορείτε επίσης να επισυνάψετε φωτογραφία για καλύτερη τεκμηρίωση.
+          </div></div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Πώς γνωρίζω αν η αναφορά μου έγινε αποδεκτή; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Μετά την υποβολή, η αναφορά σας λαμβάνει κατάσταση <strong>«Σε εκκρεμότητα»</strong>.
+            Παρακολουθείτε την πρόοδο από τη σελίδα «Οι Αναφορές μου». Θα ενημερωθείτε με email όταν επιλυθεί.
+          </div></div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Ποιες κατηγορίες προβλημάτων μπορώ να αναφέρω; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Παράνομες χωματερές, φθορές σε πάρκα ή κοινόχρηστους χώρους, ρύπανση νερού ή εδάφους,
+            εγκαταλελειμμένα οχήματα, ηχορύπανση και κάθε άλλο περιβαλλοντικό πρόβλημα στην περιοχή σας.
+          </div></div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Πόσο χρόνο παίρνει η επίλυση μιας αναφοράς; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Εξαρτάται από τη βαρύτητα. Κρίσιμα ζητήματα εντός <strong>48 ωρών</strong>,
+            θέματα χαμηλής βαρύτητας έως 2 εβδομάδες.
+          </div></div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Μπορώ να επισυνάψω φωτογραφία στην αναφορά μου; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Ναι! Υποστηρίζονται αρχεία JPG, PNG και WEBP έως 5MB.
+          </div></div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Είναι δωρεάν η χρήση της πλατφόρμας; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Ναι, εντελώς δωρεάν για τους πολίτες. Χρηματοδοτείται από τον δήμο.
+          </div></div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Πώς μπορεί ένας δήμος να ενταχθεί στην πλατφόρμα; <span class="faq-arrow">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            Μεταβείτε στην καρτέλα <strong>«Εγγραφή Δήμου»</strong> παραπάνω, συμπληρώστε τα στοιχεία σας
+            και επισυνάψτε ένα επίσημο έγγραφο που αποδεικνύει τη θέση σας στο δήμο.
+            Η ομάδα μας θα επικοινωνήσει μαζί σας εντός 1–2 εργάσιμων ημερών.
+          </div></div>
+        </div>
+
+      </div>
+
+      <!-- Quick links -->
+      <div style="margin-top: 48px; max-width: 800px;">
+        <h3 style="font-family: var(--font-display); font-size: 1.3rem; color: var(--primary-dark); margin-bottom: 20px;">Χρήσιμοι Σύνδεσμοι</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+          <a href="report.html" class="feature-card" style="padding: 20px; display: flex; align-items: center; gap: 14px; text-decoration: none;">
+            <span style="font-size: 1.6rem;">✏️</span>
+            <div>
+              <div style="font-weight: 600; color: var(--text-dark);">Νέα Αναφορά</div>
+              <div style="font-size: .82rem; color: var(--text-mid);">Υποβάλε πρόβλημα τώρα</div>
+            </div>
+          </a>
+          <a href="my-reports.html" class="feature-card" style="padding: 20px; display: flex; align-items: center; gap: 14px; text-decoration: none;">
+            <span style="font-size: 1.6rem;">📋</span>
+            <div>
+              <div style="font-weight: 600; color: var(--text-dark);">Οι Αναφορές μου</div>
+              <div style="font-size: .82rem; color: var(--text-mid);">Παρακολούθησε την πρόοδο</div>
+            </div>
+          </a>
+          <a href="stats.html" class="feature-card" style="padding: 20px; display: flex; align-items: center; gap: 14px; text-decoration: none;">
+            <span style="font-size: 1.6rem;">📊</span>
+            <div>
+              <div style="font-weight: 600; color: var(--text-dark);">Στατιστικά</div>
+              <div style="font-size: .82rem; color: var(--text-mid);">Δες αναφορές ανά δήμο</div>
+            </div>
+          </a>
+          <a href="about.html" class="feature-card" style="padding: 20px; display: flex; align-items: center; gap: 14px; text-decoration: none;">
+            <span style="font-size: 1.6rem;">🌿</span>
+            <div>
+              <div style="font-weight: 600; color: var(--text-dark);">About Us</div>
+              <div style="font-size: .82rem; color: var(--text-mid);">Μάθε για την ομάδα</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /#panel-faq -->
+
+    <!-- ── MUNICIPALITY REGISTRATION PANEL ── -->
+    <div class="panel" id="panel-municipality">
+
+      <div style="max-width: 760px; margin: 0 auto;">
+
+        <!-- Info banner -->
+        <div class="mun-info-banner" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: #fff; border-radius: var(--radius-md); padding: 32px 36px; margin-bottom: 36px; display: flex; gap: 24px; align-items: flex-start;">
+          <span class="mun-banner-icon" style="font-size: 2.4rem; flex-shrink: 0;">🏛</span>
+          <div>
+            <h2 style="font-family: var(--font-display); font-size: 1.5rem; margin: 0 0 10px;">Θέλετε ο δήμος σας στο EcoCity Tracker;</h2>
+            <p style="margin: 0; opacity: .9; line-height: 1.7; font-size: .95rem;">
+              Συμπληρώστε τη φόρμα με τα στοιχεία σας και <strong>επισυνάψτε επίσημο έγγραφο</strong>
+              (π.χ. βεβαίωση υπηρεσίας, ΦΕΚ διορισμού ή έγγραφο δήμου) που αποδεικνύει τη θέση σας.
+              Θα σας απαντήσουμε εντός <strong>1–2 εργάσιμων ημερών</strong> με τους κωδικούς πρόσβασης.
+            </p>
+          </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="mun-steps-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px;">
+          <div style="text-align: center; padding: 20px 16px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--light-bg); color: var(--primary-dark); font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 1rem;">1</div>
+            <div style="font-weight: 600; font-size: .9rem; color: var(--text-dark); margin-bottom: 4px;">Συμπληρώστε τη φόρμα</div>
+            <div style="font-size: .8rem; color: var(--text-mid);">Στοιχεία επικοινωνίας & θέση</div>
+          </div>
+          <div style="text-align: center; padding: 20px 16px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--light-bg); color: var(--primary-dark); font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 1rem;">2</div>
+            <div style="font-weight: 600; font-size: .9rem; color: var(--text-dark); margin-bottom: 4px;">Επισυνάψτε έγγραφο</div>
+            <div style="font-size: .8rem; color: var(--text-mid);">PDF, DOC ή εικόνα έως 10MB</div>
+          </div>
+          <div style="text-align: center; padding: 20px 16px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--light-bg); color: var(--primary-dark); font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 1rem;">3</div>
+            <div style="font-weight: 600; font-size: .9rem; color: var(--text-dark); margin-bottom: 4px;">Λάβετε κωδικούς</div>
+            <div style="font-size: .8rem; color: var(--text-mid);">Εντός 1–2 εργάσιμων ημερών</div>
+          </div>
+        </div>
+
+        <!-- Form card -->
+        <div class="form-card" style="max-width: 100%;">
+
+          <!-- Success state -->
+          <div id="munSuccess" style="display:none; text-align:center; padding: 24px 0;">
+            <div style="font-size: 3rem; margin-bottom: 16px;">✅</div>
+            <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--primary-dark); margin: 0 0 12px;">Το αίτημά σας στάλθηκε!</h3>
+            <p style="color: var(--text-mid); margin: 0 0 24px; line-height: 1.7;">
+              Λάβαμε τα στοιχεία σας και θα επικοινωνήσουμε μαζί σας εντός <strong>1–2 εργάσιμων ημερών</strong>
+              στο email που δηλώσατε.
+            </p>
+            <button class="btn btn-green" onclick="resetMunForm()">Νέο Αίτημα</button>
+          </div>
+
+          <!-- Form -->
+          <form id="munForm" onsubmit="submitMunForm(event)" novalidate>
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label class="form-label">Πλήρες Όνομα <span class="required">*</span></label>
+                <input class="form-input" type="text" id="munFullName" placeholder="π.χ. Γεώργιος Παπαδόπουλος" required />
+                <span class="form-error" id="errFullName">Απαιτείται πλήρες όνομα.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Δήμος <span class="required">*</span></label>
+                <input class="form-input" type="text" id="munMunicipality" placeholder="π.χ. Δήμος Αιγάλεω" required />
+                <span class="form-error" id="errMunicipality">Απαιτείται το όνομα του δήμου.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Θέση / Ρόλος</label>
+                <input class="form-input" type="text" id="munPosition" placeholder="π.χ. Προϊστάμενος Τεχνικής Υπηρεσίας" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email Επικοινωνίας <span class="required">*</span></label>
+                <input class="form-input" type="email" id="munEmail" placeholder="yourname@municipality.gr" required />
+                <span class="form-error" id="errEmail">Απαιτείται έγκυρο email.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Τηλέφωνο</label>
+                <input class="form-input" type="tel" id="munPhone" placeholder="π.χ. 210 123 4567" />
+              </div>
+
+              <div class="form-group full">
+                <label class="form-label">Μήνυμα / Σημειώσεις</label>
+                <textarea class="form-textarea" id="munMessage" placeholder="Οποιαδήποτε επιπλέον πληροφορία που θέλετε να γνωρίζουμε..."></textarea>
+              </div>
+
+              <!-- Document upload -->
+              <div class="form-group full">
+                <label class="form-label">Επίσημο Έγγραφο <span class="required">*</span></label>
+                <div class="mun-upload-area" id="munUploadArea" onclick="document.getElementById('munDocument').click()">
+                  <input type="file" id="munDocument" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileSelect(this)" />
+                  <div id="munUploadPlaceholder">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">📎</div>
+                    <div style="font-weight: 600; color: var(--text-dark); margin-bottom: 4px;">Κάντε κλικ για επιλογή αρχείου</div>
+                    <div style="font-size: .82rem; color: var(--text-mid);">PDF, DOC, DOCX, JPG, PNG · Έως 10 MB</div>
+                  </div>
+                  <div id="munUploadSelected" style="display:none; align-items:center; gap:12px; justify-content:center;">
+                    <span style="font-size:1.4rem;">📄</span>
+                    <div>
+                      <div id="munFileName" style="font-weight:600; color:var(--primary-dark);"></div>
+                      <div id="munFileSize" style="font-size:.8rem;color:var(--text-mid);"></div>
+                    </div>
+                    <button type="button" onclick="clearFile(event)" style="background:none;border:none;cursor:pointer;color:var(--status-critical);font-size:1.2rem;padding:4px;" title="Αφαίρεση">✕</button>
+                  </div>
+                </div>
+                <span class="form-error" id="errDocument">Απαιτείται επίσημο έγγραφο.</span>
+                <span class="form-hint">Βεβαίωση υπηρεσίας, ΦΕΚ διορισμού ή οποιοδήποτε επίσημο έγγραφο δήμου.</span>
+              </div>
+
+            </div><!-- /.form-grid -->
+
+            <div class="form-submit-bar">
+              <div id="munError" style="display:none; color:var(--status-critical); font-size:.875rem; align-self:center;"></div>
+              <button type="submit" class="btn btn-green" id="munSubmitBtn">
+                <span id="munBtnText">📨 Αποστολή Αιτήματος</span>
+                <span id="munBtnLoader" style="display:none;">⏳ Αποστολή...</span>
+              </button>
+            </div>
+
+          </form>
+
+        </div><!-- /.form-card -->
+
+        <!-- Login hint for existing officials -->
+        <p style="text-align:center; margin-top:24px; font-size:.875rem; color:var(--text-mid);">
+          Ήδη εγγεγραμμένος αρμόδιος;
+          <a href="official-login.html" style="color:var(--primary); font-weight:600;">Σύνδεση εδώ →</a>
+        </p>
+
+      </div>
+    </div><!-- /#panel-municipality -->
+
+    <!-- ── CHAT PANEL ── -->
+    <div class="panel" id="panel-report">
+
+      <!-- NOT LOGGED IN -->
+      <div id="chatLoginPrompt" class="chat-login-prompt">
+        <div class="chat-login-icon">💬</div>
+        <h2>Live Chat Υποστήριξης</h2>
+        <p>Η ομάδα μας είναι εδώ για να σας βοηθήσει να καταλάβετε πώς λειτουργεί η πλατφόρμα.
+           Συνδεθείτε για να ξεκινήσετε τη συνομιλία.</p>
+        <button class="btn btn-green" onclick="goToLogin()">🔐 Σύνδεση για Chat</button>
+        <div class="chat-info-grid">
+          <div class="chat-info-card">⏱️ <span>Απάντηση σε &lt;2 λεπτά</span></div>
+          <div class="chat-info-card">🕐 <span>Διαθέσιμο 09:00–17:00</span></div>
+          <div class="chat-info-card">👥 <span>Ομάδα υποστήριξης</span></div>
+        </div>
+      </div>
+
+      <!-- LOGGED IN — Tawk.to opens automatically -->
+      <div id="chatReady" class="chat-login-prompt" style="display:none;">
+        <div class="chat-login-icon">✅</div>
+        <h2>Το chat είναι έτοιμο!</h2>
+        <p>Η ομάδα υποστήριξης είναι διαθέσιμη. Το chat παράθυρο έχει ανοίξει κάτω δεξιά.</p>
+        <button class="btn btn-green" onclick="openTawk()">💬 Άνοιγμα Chat</button>
+        <div class="chat-info-grid">
+          <div class="chat-info-card">⏱️ <span>Απάντηση σε &lt;2 λεπτά</span></div>
+          <div class="chat-info-card">🕐 <span>Διαθέσιμο 09:00–17:00</span></div>
+          <div class="chat-info-card">👥 <span>Πραγματικός άνθρωπος</span></div>
+        </div>
+      </div>
+
+    </div><!-- /#panel-report -->
+
+  </div><!-- /.container -->
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span>
+        <a href="privacy.html" style="color:rgba(255,255,255,.8);text-decoration:underline;margin-right:12px;">🔒 Απόρρητο &amp; Άδεια</a>
+        <a href="about.html" style="color:rgba(255,255,255,.8);text-decoration:underline;">About Us</a>
+      </span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <div id="toastContainer"></div>
+
+  <!-- Tawk.to — email notifications configured in dashboard -->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function () {
+      var s1 = document.createElement('script'), s0 = document.getElementsByTagName('script')[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/69d8d0516839171c36f08194/1jlrergba';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  </script>
+
+  <script src="../js/help.js"></script>
+
+</body>
+</html>

@@ -23,10 +23,33 @@
         <li><a href="html/about.html" class="nav-link">About Us</a></li>
         <li><a href="html/stats.html" class="nav-link">Στατιστικά</a></li>
         <li><a href="html/ranking.html" class="nav-link">Ranking</a></li>
-        <li><a href="html/auth.html" class="nav-link nav-citizen">Πολίτες</a></li>
-        <li><a href="html/official-login.html" class="nav-link nav-admin">Αρμόδιοι</a></li>
+        <li><a href="html/help.html" class="nav-link">Βοήθεια</a></li>
       </ul>
       <div class="nav-user" id="navUser">
+        <div class="nav-login-menu" id="navLoginMenu" style="display:none;">
+          <button class="nav-login-btn" id="navLoginBtn">
+            <span class="nav-login-icon">🔐</span>
+            <span class="nav-login-text">Σύνδεση</span>
+            <span class="nav-login-caret">▾</span>
+          </button>
+          <div class="nav-login-dropdown" id="navLoginDropdown" style="display:none;">
+            <a href="html/auth.html" class="nav-login-option">
+              <span class="nav-login-opt-icon">👤</span>
+              <div>
+                <div class="nav-opt-title">Πολίτης</div>
+                <div class="nav-opt-sub">Σύνδεση ή εγγραφή</div>
+              </div>
+            </a>
+            <hr class="nav-divider" style="margin:0;">
+            <a href="html/official-login.html" class="nav-login-option nav-login-official">
+              <span class="nav-login-opt-icon">🏛</span>
+              <div>
+                <div class="nav-opt-title">Αρμόδιος</div>
+                <div class="nav-opt-sub">Πρόσβαση δήμου</div>
+              </div>
+            </a>
+          </div>
+        </div>
         <div class="nav-user-menu" id="navUserMenu" style="display:none;">
           <button class="nav-user-btn" id="navUserBtn">
             <span id="navUserIcon">👤</span>
@@ -39,8 +62,8 @@
             </div>
             <hr class="nav-divider">
             <a href="html/profile.html" id="navProfile">👤 Προφίλ</a>
-            <a href="#" id="navReports" style="display:none;">📋 Οι Αναφορές μου</a>
-            <a href="#" id="navDashboard" style="display:none;">🏛 Πίνακας Δήμου</a>
+            <a href="html/my-reports.html" id="navReports" style="display:none;">📋 Οι Αναφορές μου</a>
+            <a href="html/official-dashboard.html" id="navDashboard" style="display:none;">🏛 Πίνακας Δήμου</a>
             <hr class="nav-divider">
             <a href="#" id="navLogout" class="nav-logout">🚪 Αποσύνδεση</a>
           </div>
@@ -87,6 +110,55 @@
     </div>
   </section>
  
+  <!-- MUNICIPALITY CTA -->
+  <section style="padding: 56px 0; background: var(--white); border-top: 1px solid var(--border);">
+    <div class="container">
+      <div class="mun-cta-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; max-width: 900px; margin: 0 auto;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--light-bg); border: 1px solid var(--secondary); border-radius: 100px; padding: 5px 14px; font-size: .8rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 16px;">
+            🏛 Για Δήμους
+          </div>
+          <h2 style="font-family: var(--font-display); font-size: 1.9rem; color: var(--primary-dark); margin: 0 0 14px; line-height: 1.2;">
+            Θέλεις ο δήμος σου<br>να ενταχθεί στην πλατφόρμα;
+          </h2>
+          <p style="color: var(--text-mid); line-height: 1.75; margin: 0 0 24px; font-size: .95rem;">
+            Στείλε αίτημα εγγραφής, επισύναψε ένα επίσημο έγγραφο που αποδεικνύει τη θέση σου στο δήμο
+            και η ομάδα μας θα σε ενημερώσει εντός <strong>1–2 εργάσιμων ημερών</strong>.
+          </p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="html/help.html?tab=municipality" class="btn btn-green">Αίτημα Εγγραφής Δήμου →</a>
+            <a href="html/official-login.html" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;font-size:.9rem;color:var(--text-mid);font-weight:500;border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition);" onmouseover="this.style.background='var(--page-bg)'" onmouseout="this.style.background='transparent'">
+              Ήδη εγγεγραμμένος; Σύνδεση
+            </a>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 14px; background: var(--page-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px;">
+            <span style="font-size: 1.4rem; flex-shrink:0;">📎</span>
+            <div>
+              <div style="font-weight: 600; font-size: .9rem; color: var(--text-dark);">Επίσημο Έγγραφο</div>
+              <div style="font-size: .82rem; color: var(--text-mid);">Βεβαίωση υπηρεσίας, ΦΕΚ ή έγγραφο δήμου</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px; background: var(--page-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px;">
+            <span style="font-size: 1.4rem; flex-shrink:0;">⚡</span>
+            <div>
+              <div style="font-weight: 600; font-size: .9rem; color: var(--text-dark);">Γρήγορη Ενεργοποίηση</div>
+              <div style="font-size: .82rem; color: var(--text-mid);">Κωδικοί εντός 1–2 εργάσιμων ημερών</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px; background: var(--page-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px;">
+            <span style="font-size: 1.4rem; flex-shrink:0;">💬</span>
+            <div>
+              <div style="font-weight: 600; font-size: .9rem; color: var(--text-dark);">Live Chat Υποστήριξη</div>
+              <div style="font-size: .82rem; color: var(--text-mid);">Ερωτήσεις; Μιλήστε μαζί μας τώρα</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- STATS COUNTER -->
   <section class="counter-section">
     <div class="container">
@@ -151,89 +223,5 @@
   </footer>
  
   <script src="js/main.js"></script>
-  <script>
-    // Nav user management
-    function initNavUser() {
-      var user = null;
-      try { user = JSON.parse(localStorage.getItem('ecocity_user') || 'null'); } catch (e) {}
-      var official = null;
-      try { official = JSON.parse(localStorage.getItem('ecocity_official') || 'null'); } catch (e) {}
-
-      var navLoginBtn = document.getElementById('navLoginBtn');
-      var navUserMenu = document.getElementById('navUserMenu');
-      var navUserName = document.getElementById('navUserName');
-      var navDropdown = document.getElementById('navDropdown');
-      var navUserBtn = document.getElementById('navUserBtn');
-
-      if (user || official) {
-        // Logged in
-        navUserMenu.style.display = 'flex';
-        var currentUser = user || official;
-        navUserName.textContent = currentUser.fullName || currentUser.username || 'Χρήστης';
-        if (official) navUserName.textContent += ' (Αρμόδιος)';
-
-        // Fill dropdown info
-        document.getElementById('navInfoName').textContent = currentUser.fullName || currentUser.username || 'Χρήστης';
-        document.getElementById('navInfoEmail').textContent = currentUser.email || '';
-
-        // Show/hide links based on user type
-        if (user) {
-          document.getElementById('navReports').style.display = 'block';
-          document.getElementById('navDashboard').style.display = 'none';
-        } else if (official) {
-          document.getElementById('navReports').style.display = 'none';
-          document.getElementById('navDashboard').style.display = 'block';
-        }
-
-        // Dropdown toggle
-        navUserBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          navDropdown.style.display = navDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Close dropdown on outside click
-        document.addEventListener('click', function(e) {
-          if (!navUserMenu.contains(e.target)) {
-            navDropdown.style.display = 'none';
-          }
-        });
-
-        // Logout
-        document.getElementById('navLogout').addEventListener('click', function(e) {
-          e.preventDefault();
-          try { localStorage.removeItem('ecocity_user'); localStorage.removeItem('ecocity_official'); } catch (e) {}
-          location.reload();
-        });
-
-        // Profile
-        document.getElementById('navProfile').addEventListener('click', function(e) {
-          e.preventDefault();
-          window.location.href = 'html/profile.html';
-        });
-
-        // Reports
-        document.getElementById('navReports').addEventListener('click', function(e) {
-          e.preventDefault();
-          window.location.href = 'html/my-reports.html';
-        });
-
-        // Dashboard
-        document.getElementById('navDashboard').addEventListener('click', function(e) {
-          e.preventDefault();
-          window.location.href = 'html/official-dashboard.html';
-        });
-
-      } else {
-        // Not logged in
-        navLoginBtn.style.display = 'flex';
-        navUserMenu.style.display = 'none';
-        navLoginBtn.addEventListener('click', function() {
-          window.location.href = 'html/auth.html';
-        });
-      }
-    }
-
-    initNavUser();
-  </script>
 </body>
 </html>

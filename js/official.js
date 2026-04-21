@@ -2,6 +2,24 @@
 
 var API_BASE = '/api';
 
+// ── Nav Toggle ────────────────────────────────────────────────
+(function () {
+  var toggle   = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  if (toggle && navLinks) {
+    toggle.addEventListener('click', function () {
+      navLinks.classList.toggle('open');
+      toggle.classList.toggle('open');
+    });
+    document.addEventListener('click', function (e) {
+      if (!toggle.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove('open');
+        toggle.classList.remove('open');
+      }
+    });
+  }
+})();
+
 // ---------------------------------------------------------------
 // Detect which page we are on
 // ---------------------------------------------------------------
