@@ -1,4 +1,4 @@
-/* api/municipality-request.js — Αιτήματα εγγραφής νέων δήμων */
+/* api/municipality-request.js — New municipality registration requests */
 'use strict';
 
 const express  = require('express');

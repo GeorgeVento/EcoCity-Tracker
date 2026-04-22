@@ -1,4 +1,4 @@
-/* api/ranking.js — Κατάταξη δήμων βάσει ποσοστού επίλυσης (MySQL) */
+/* api/ranking.js — Municipality ranking based on resolution rate (MySQL) */
 'use strict';
 
 const express  = require('express');

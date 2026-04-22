@@ -1,4 +1,4 @@
-/* js/ranking.js — Κατάταξη δήμων βάσει ποσοστού επίλυσης */
+/* js/ranking.js — Municipality ranking based on resolution rate */
 (function () {
   'use strict';
 
@@ -24,8 +24,7 @@
     'Μαρούσι', 'Κηφισιά', 'Παλαιό Φάληρο'
   ];
 
-  // Fallback ποσοστά όταν δεν υπάρχουν αναφορές στο localStorage
-  // ── Υπολογισμός κατάταξης ────────────────────────────────────
+  // ── Calculate ranking ─────────────────────────────────────────
   function calcRanking() {
     var reports = [];
     try { reports = JSON.parse(localStorage.getItem('ecocity_reports') || '[]'); } catch (e) {}
@@ -43,7 +42,7 @@
     return data;
   }
 
-  // ── Render Podium (1η, 2η, 3η θέση) ─────────────────────────
+  // ── Render Podium (1st, 2nd, 3rd place) ──────────────────────
   function renderPodium(top3) {
     var MEDALS = ['🥇', '🥈', '🥉'];
     var COLORS = ['#ffd700', '#c0c0c0', '#cd7f32'];
@@ -62,7 +61,7 @@
     }).join('');
   }
 
-  // ── Render List (4η–12η θέση) ────────────────────────────────
+  // ── Render List (4th–12th place) ─────────────────────────────
   function renderList(rest) {
     var list = document.getElementById('rankingList');
 

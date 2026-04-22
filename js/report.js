@@ -1,4 +1,4 @@
-/* js/report.js — Φόρμα αναφοράς: GPS, φωτογραφία, αποθήκευση */
+/* js/report.js — Report form: GPS, photo upload, submission */
 (function () {
   'use strict';
 

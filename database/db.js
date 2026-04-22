@@ -1,4 +1,4 @@
-/* database/db.js — MySQL connection pool & δημιουργία πινάκων */
+/* database/db.js — MySQL connection pool & table creation */
 'use strict';
 
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
@@ -37,7 +37,7 @@ async function initDB() {
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
   `);
 
-  // Ασφαλής προσθήκη στηλών αν η users υπάρχει ήδη χωρίς αυτές
+  // Safely add columns if the users table already exists without them
   var newCols = [
     "ALTER TABLE users ADD COLUMN username VARCHAR(100) UNIQUE",
     "ALTER TABLE users ADD COLUMN password VARCHAR(255)",
@@ -48,7 +48,7 @@ async function initDB() {
     "ALTER TABLE users ADD COLUMN reset_expires_at DATETIME"
   ];
   for (var sql of newCols) {
-    try { await pool.query(sql); } catch (e) { /* στήλη υπάρχει ήδη */ }
+    try { await pool.query(sql); } catch (e) { /* column already exists */ }
   }
 
   await pool.query(`

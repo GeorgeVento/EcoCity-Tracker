@@ -1,4 +1,4 @@
-/* js/stats.js — Στατιστικά με Chart.js, φίλτρο δήμου */
+/* js/stats.js — Statistics with Chart.js, municipality filter */
 (function () {
   'use strict';
 
@@ -73,7 +73,7 @@
     buildLine(data);
   }
 
-  // ── Bar: αναφορές ανά κατηγορία ─────────────────────────────
+  // ── Bar: reports per category ────────────────────────────────
   function buildBar(data) {
     var counts = CATEGORIES.map(function (cat) {
       return data.filter(function (r) { return r.category === cat; }).length;
@@ -101,7 +101,7 @@
     });
   }
 
-  // ── Doughnut: κατανομή ανά κατάσταση ────────────────────────
+  // ── Doughnut: distribution by status ────────────────────────
   function buildDoughnut(data) {
     var pending  = data.filter(function (r) { return r.status === 'pending';  }).length;
     var reviewed = data.filter(function (r) { return r.status === 'reviewed'; }).length;
@@ -122,7 +122,7 @@
     });
   }
 
-  // ── Line: εβδομαδιαία τάση (τελευταίες 8 εβδομάδες) ─────────
+  // ── Line: weekly trend (last 8 weeks) ───────────────────────
   function buildLine(data) {
     var now = new Date();
     var labels = [], counts = [];

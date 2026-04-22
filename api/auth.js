@@ -1,4 +1,4 @@
-/* api/auth.js — Αυθεντικοποίηση πολιτών και αρμοδίων (JWT + MySQL + email) */
+/* api/auth.js — Authentication for citizens and officials (JWT + MySQL + email) */
 'use strict';
 
 const express  = require('express');
@@ -82,7 +82,7 @@ router.post('/citizen/register', async function (req, res) {
     // Hash password
     var hashedPassword = bcrypt.hashSync(password, 10);
 
-    // Δημιουργία token επιβεβαίωσης (λήγει σε 24 ώρες)
+    // Generate verification token (expires in 24 hours)
     var token      = crypto.randomBytes(32).toString('hex');
     var expiresAt  = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
@@ -91,7 +91,7 @@ router.post('/citizen/register', async function (req, res) {
       [fullName, username, email, hashedPassword, homeMunicipality, token, expiresAt]
     );
 
-    // Στολή email (αν αποτύχει, η εγγραφή ΔΕΝ ακυρώνεται)
+    // Send verification email (registration is NOT rolled back if this fails)
     try {
       await sendVerificationEmail(email, fullName, token);
     } catch (mailErr) {
@@ -379,7 +379,7 @@ router.post('/citizen/forgot-password', async function (req, res) {
 
     var user = rows[0];
 
-    // Δημιουργία reset token (λήγει σε 1 ώρα)
+    // Generate reset token (expires in 1 hour)
     var token     = crypto.randomBytes(32).toString('hex');
     var expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
@@ -388,7 +388,7 @@ router.post('/citizen/forgot-password', async function (req, res) {
       [token, expiresAt, user.id]
     );
 
-    // Στολή email
+    // Send reset email
     try {
       await sendResetEmail(email, user.full_name, token);
     } catch (mailErr) {

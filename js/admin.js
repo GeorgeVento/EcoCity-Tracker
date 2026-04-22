@@ -1,4 +1,4 @@
-/* js/admin.js — Admin Panel: πίνακας αναφορών, φίλτρα, export CSV */
+/* js/admin.js — Admin Panel: reports table, filters, CSV export */
 (function () {
   'use strict';
 

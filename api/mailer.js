@@ -1,4 +1,4 @@
-/* api/mailer.js — Αποστολή email με nodemailer */
+/* api/mailer.js — Email sending via nodemailer */
 'use strict';
 
 const nodemailer = require('nodemailer');
@@ -21,7 +21,7 @@ function getTransporter() {
   return transporter;
 }
 
-// ── Email επιβεβαίωσης εγγραφής ──────────────────────────────
+// ── Registration verification email ──────────────────────────
 async function sendVerificationEmail(email, fullName, token) {
   if (!process.env.SMTP_USER || process.env.SMTP_USER === 'your-gmail@gmail.com') {
     console.warn('⚠️  SMTP δεν έχει ρυθμιστεί — email δεν στάλθηκε στο ' + email);
@@ -61,7 +61,7 @@ async function sendVerificationEmail(email, fullName, token) {
   console.log('📧  Email επιβεβαίωσης στάλθηκε στο ' + email);
 }
 
-// ── Email επαναφοράς κωδικού ──────────────────────────────
+// ── Password reset email ──────────────────────────────────
 async function sendResetEmail(email, fullName, token) {
   if (!process.env.SMTP_USER || process.env.SMTP_USER === 'your-gmail@gmail.com') {
     console.warn('⚠️  SMTP δεν έχει ρυθμιστεί — email δεν στάλθηκε στο ' + email);
@@ -101,7 +101,7 @@ async function sendResetEmail(email, fullName, token) {
   console.log('📧  Email επαναφοράς στάλθηκε στο ' + email);
 }
 
-// ── Email αιτήματος εγγραφής νέου Δήμου ──────────────────────
+// ── New municipality registration request email ───────────────
 async function sendMunicipalityRequest({ fullName, municipality, position, email, phone, message, documentPath, originalName }) {
   const ADMIN = process.env.ADMIN_EMAIL || 'g.l.ventouratos@gmail.com';
 

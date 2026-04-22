@@ -1,4 +1,4 @@
-/* api/notifications.js — Μέτρηση εκκρεμών αναφορών για badge (MySQL) */
+/* api/notifications.js — Count pending reports for badge (MySQL) */
 'use strict';
 
 const express  = require('express');

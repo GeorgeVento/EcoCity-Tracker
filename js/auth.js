@@ -127,7 +127,7 @@
     try { localStorage.setItem('ecocity_user', JSON.stringify(user)); } catch (e) {}
   }
 
-  // --- Κλείδωμα / ξεκλείδωμα κουμπιού ---
+  // --- Lock / unlock submit button ---
   function setBusy(form, busy) {
     var btn = form.querySelector('button[type="submit"]');
     if (btn) btn.disabled = busy;
@@ -225,7 +225,7 @@
         return;
       }
 
-      // Αποθήκευση session
+      // Save session
       saveSession(data.user);
 
       showToast('Καλωσόρισες, ' + fullName + '! Στάλθηκε email επιβεβαίωσης.', 'success');

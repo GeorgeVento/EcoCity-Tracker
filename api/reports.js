@@ -1,4 +1,4 @@
-/* api/reports.js — CRUD αναφορών (MySQL) */
+/* api/reports.js — Reports CRUD (MySQL) */
 'use strict';
 
 const express  = require('express');
@@ -79,7 +79,7 @@ router.post('/', optionalToken, async function (req, res) {
 
     var id = req.body.id || genId();
 
-    // Αποφυγή διπλότυπων (localStorage sync)
+    // Avoid duplicates (localStorage sync)
     var [existing] = await pool.query('SELECT id FROM reports WHERE id = ?', [id]);
     if (existing.length > 0) {
       var [dup] = await pool.query('SELECT * FROM reports WHERE id = ?', [id]);
@@ -91,11 +91,11 @@ router.post('/', optionalToken, async function (req, res) {
     var userIdToUse = req.user ? req.user.id : (userId ? parseInt(userId, 10) : null);
 
     if (userIdToUse) {
-      // Αν είναι logged in ή έχει userId, πάρε username από βάση
+      // If logged in or userId provided, fetch username from database
       var [userRows] = await pool.query('SELECT username FROM users WHERE id = ?', [userIdToUse]);
       if (userRows.length > 0) {
         reporterNameToUse = userRows[0].username;
-        reporterEmailToUse = ''; // Μην εμφανίζεις email για προστασία
+        reporterEmailToUse = ''; // Hide email for privacy
       }
     }
 

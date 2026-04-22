@@ -57,7 +57,7 @@ app.get('*', function (_req, res) {
   res.sendFile(path.join(ROOT, 'index.html'));
 });
 
-// ── Start (μετά σύνδεση στη MySQL) ───────────────────────────
+// ── Start (after MySQL connection is established) ─────────────
 initDB().then(function () {
   app.listen(PORT, function () {
     console.log('🌿 EcoCity Tracker  →  http://localhost:' + PORT);

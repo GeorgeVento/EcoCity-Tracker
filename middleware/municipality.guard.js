@@ -1,4 +1,4 @@
-/* middleware/municipality.guard.js — Αρμόδιος μπορεί να τροποποιεί μόνο αναφορές του δήμου του */
+/* middleware/municipality.guard.js — Officials can only modify reports belonging to their municipality */
 'use strict';
 
 const { pool } = require('../database/db');
@@ -14,7 +14,7 @@ async function municipalityGuard(req, res, next) {
   try {
     var [rows] = await pool.query('SELECT municipality FROM reports WHERE id = ?', [reportId]);
 
-    if (rows.length === 0) return next(); // το reports.js θα επιστρέψει 404
+    if (rows.length === 0) return next(); // reports.js will return 404
 
     if (rows[0].municipality !== user.municipality) {
       return res.status(403).json({

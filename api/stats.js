@@ -1,4 +1,4 @@
-/* api/stats.js — Στατιστικά & αριθμός πολιτών (MySQL) */
+/* api/stats.js — Statistics & citizen count (MySQL) */
 'use strict';
 
 const express  = require('express');

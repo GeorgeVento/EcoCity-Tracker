@@ -1,4 +1,4 @@
-/* js/main.js — Κοινές λειτουργίες: nav toggle, counters, πρόσφατες αναφορές */
+/* js/main.js — Shared utilities: nav toggle, counters, recent reports */
 
 /* ── Shared Nav User Init ────────────────────────────────────── */
 window.initNavUser = function () {
@@ -71,7 +71,7 @@ window.initNavUser = function () {
 (function () {
   'use strict';
 
-  // ── Guard: Νέα Αναφορά → πρώτα σύνδεση ─────────────────────
+  // ── Guard: New Report → login required ───────────────────────
   document.querySelectorAll('a[href="html/report.html"]').forEach(function (link) {
     link.addEventListener('click', function (e) {
       var user = null;

@@ -1,4 +1,4 @@
-/* api/export.js — Export αναφορών σε CSV (MySQL) */
+/* api/export.js — Export reports to CSV (MySQL) */
 'use strict';
 
 const express  = require('express');

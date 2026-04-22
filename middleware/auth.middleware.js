@@ -1,4 +1,4 @@
-/* middleware/auth.middleware.js — Επαλήθευση JWT token */
+/* middleware/auth.middleware.js — JWT token verification */
 'use strict';
 
 const jwt = require('jsonwebtoken');
@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'EcoCitySecretKey2026_SAEK';
 
 /**
- * verifyToken — Υποχρεωτικός έλεγχος JWT.
- * Αν το token λείπει ή είναι άκυρο, επιστρέφει 401.
- * Αν είναι έγκυρο, βάζει req.user = decoded payload.
+ * verifyToken — Mandatory JWT check.
+ * Returns 401 if the token is missing or invalid.
+ * Sets req.user = decoded payload if valid.
  */
 function verifyToken(req, res, next) {
   var auth = req.headers.authorization || '';
@@ -31,9 +31,9 @@ function verifyToken(req, res, next) {
 }
 
 /**
- * optionalToken — Προαιρετικός έλεγχος JWT.
- * Δεν επιστρέφει σφάλμα αν λείπει. Χρήσιμο για public endpoints
- * που θέλουμε να γνωρίζουμε αν ο χρήστης είναι συνδεδεμένος.
+ * optionalToken — Optional JWT check.
+ * Does not return an error if the token is absent. Useful for public
+ * endpoints where we want to know whether the user is logged in.
  */
 function optionalToken(req, res, next) {
   var auth = req.headers.authorization || '';

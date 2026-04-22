@@ -1,5 +1,5 @@
-/* database/seed.js — Αρχικά δεδομένα: δήμοι + αρμόδιοι
-   Εκτέλεση: node database/seed.js  ή  npm run seed
+/* database/seed.js — Initial data: municipalities + officials
+   Run: node database/seed.js  or  npm run seed
 */
 'use strict';
 
@@ -17,66 +17,66 @@ const MUNICIPALITIES = [
 ];
 
 const OFFICIALS_RAW = [
-  // ── Αθήνα (2 αρμόδιοι) ────────────────────────────────────
+  // ── Athens (2 officials) ──────────────────────────────────
   { username: 'official_athens_1',     password: 'Ath3ns@2026!',     municipality: 'Αθήνα',           fullName: 'Γεώργιος Αθηναίος' },
   { username: 'official_athens_2',     password: 'Ath3ns#2026$',     municipality: 'Αθήνα',           fullName: 'Μαρία Παπαδοπούλου' },
 
-  // ── Αιγάλεω (2 αρμόδιοι) ──────────────────────────────────
+  // ── Aigaleo (2 officials) ─────────────────────────────────
   { username: 'official_aigaleo_1',    password: 'Aig@l3o!2026',     municipality: 'Αιγάλεω',         fullName: 'Νίκος Βεντουράτος' },
   { username: 'official_aigaleo_2',    password: 'Aig@l3o#2026$',    municipality: 'Αιγάλεω',         fullName: 'Ελένη Αιγαλεώτη' },
 
-  // ── Πειραιάς (2 αρμόδιοι) ─────────────────────────────────
+  // ── Piraeus (2 officials) ─────────────────────────────────
   { username: 'official_piraeus_1',    password: 'P1r@3us!2026',     municipality: 'Πειραιάς',        fullName: 'Κώστας Πειραιώτης' },
   { username: 'official_piraeus_2',    password: 'P1r@3us#2026$',    municipality: 'Πειραιάς',        fullName: 'Σοφία Λιμενίου' },
 
-  // ── Νίκαια ────────────────────────────────────────────────
+  // ── Nikaia ────────────────────────────────────────────────
   { username: 'official_nikaia',       password: 'N1k@1a!2026',      municipality: 'Νίκαια',          fullName: 'Δημήτρης Νικαιέας' },
   { username: 'official_nikaia_2',     password: 'N1k@1a#2026$',     municipality: 'Νίκαια',          fullName: 'Ευαγγελία Νικαιώτη' },
 
-  // ── Περιστέρι ─────────────────────────────────────────────
+  // ── Peristeri ─────────────────────────────────────────────
   { username: 'official_peristeri',    password: 'P3r1st3r1!2026',   municipality: 'Περιστέρι',       fullName: 'Αντώνης Περιστεριώτης' },
   { username: 'official_peristeri_2',  password: 'P3r1st3r1#2026$',  municipality: 'Περιστέρι',       fullName: 'Μαίρη Περιστεριώτη' },
 
-  // ── Χαλάνδρι ─────────────────────────────────────────────
+  // ── Chalandri ─────────────────────────────────────────────
   { username: 'official_chalandri',    password: 'Ch@l@ndr1!2026',   municipality: 'Χαλάνδρι',        fullName: 'Ιωάννης Χαλανδριώτης' },
   { username: 'official_chalandri_2',  password: 'Ch@l@ndr1#2026$',  municipality: 'Χαλάνδρι',        fullName: 'Σοφία Χαλανδριώτη' },
 
-  // ── Γλυφάδα ───────────────────────────────────────────────
+  // ── Glyfada ───────────────────────────────────────────────
   { username: 'official_glyfada',      password: 'Glyf@d@!2026',     municipality: 'Γλυφάδα',         fullName: 'Χρήστος Παραλιώτης' },
   { username: 'official_glyfada_2',    password: 'Glyf@d@#2026$',    municipality: 'Γλυφάδα',         fullName: 'Αναστασία Παραλιώτη' },
 
-  // ── Καλλιθέα ─────────────────────────────────────────────
+  // ── Kallithea ─────────────────────────────────────────────
   { username: 'official_kallithea',    password: 'K@ll1th3@!2026',   municipality: 'Καλλιθέα',        fullName: 'Βασιλική Καλλιθεάτη' },
   { username: 'official_kallithea_2',  password: 'K@ll1th3@#2026$',  municipality: 'Καλλιθέα',        fullName: 'Γιώργος Καλλιθεάτης' },
 
-  // ── Ηλιούπολη ────────────────────────────────────────────
+  // ── Ilioupoli ─────────────────────────────────────────────
   { username: 'official_ilioupoli',    password: 'Il1up0l1!2026',    municipality: 'Ηλιούπολη',       fullName: 'Παναγιώτης Ηλιουπολίτης' },
   { username: 'official_ilioupoli_2',  password: 'Il1up0l1#2026$',   municipality: 'Ηλιούπολη',       fullName: 'Ελένη Ηλιουπολίτη' },
 
-  // ── Μαρούσι ───────────────────────────────────────────────
+  // ── Maroussi ──────────────────────────────────────────────
   { username: 'official_maroussi',     password: 'M@r0uss1!2026',    municipality: 'Μαρούσι',         fullName: 'Αλέξανδρος Μαρουσιώτης' },
   { username: 'official_maroussi_2',   password: 'M@r0uss1#2026$',   municipality: 'Μαρούσι',         fullName: 'Δέσποινα Μαρουσιώτη' },
 
-  // ── Κηφισιά ───────────────────────────────────────────────
+  // ── Kifissia ──────────────────────────────────────────────
   { username: 'official_kifissia',     password: 'K1f1ss1@!2026',    municipality: 'Κηφισιά',         fullName: 'Θεοδώρα Κηφισιώτη' },
   { username: 'official_kifissia_2',   password: 'K1f1ss1@#2026$',   municipality: 'Κηφισιά',         fullName: 'Νίκος Κηφισιώτης' },
 
-  // ── Παλαιό Φάληρο ────────────────────────────────────────
+  // ── Palaio Faliro ─────────────────────────────────────────
   { username: 'official_palaiofaliro', password: 'P@l@i0F@l!2026',   municipality: 'Παλαιό Φάληρο',  fullName: 'Σταύρος Φαληριώτης' },
   { username: 'official_palaiofaliro_2', password: 'P@l@i0F@l#2026$', municipality: 'Παλαιό Φάληρο',  fullName: 'Μαρία Φαληριώτη' }
 ];
 
 async function seed() {
-  // Δημιουργία πινάκων αν δεν υπάρχουν
+  // Create tables if they do not exist
   await initDB();
 
-  // ── 1. Δήμοι ─────────────────────────────────────────────
+  // ── 1. Municipalities ────────────────────────────────────
   for (var muni of MUNICIPALITIES) {
     await pool.query('INSERT IGNORE INTO municipalities (name) VALUES (?)', [muni]);
   }
   console.log('✅  Δήμοι: ' + MUNICIPALITIES.length + ' εγγραφές');
 
-  // ── 2. Αρμόδιοι ──────────────────────────────────────────
+  // ── 2. Officials ──────────────────────────────────────────
   var inserted = 0;
   for (var o of OFFICIALS_RAW) {
     var [rows] = await pool.query('SELECT id FROM officials WHERE username = ?', [o.username]);
@@ -91,7 +91,7 @@ async function seed() {
   }
   console.log('✅  Αρμόδιοι: ' + inserted + ' νέοι / ' + OFFICIALS_RAW.length + ' σύνολο');
 
-  // ── 3. Εκτύπωση credentials ──────────────────────────────
+  // ── 3. Print credentials ──────────────────────────────────
   console.log('\n📋  Στοιχεία σύνδεσης αρμοδίων:');
   console.log('─'.repeat(65));
   OFFICIALS_RAW.forEach(function (o) {
