@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node api/server.js",
     "dev": "nodemon api/server.js",
-    "seed": "node database/seed.js"
+    "seed": "node database/seed.js",
+    "build": "echo 'No build step required'"
   },
   "keywords": [
     "ecocity",

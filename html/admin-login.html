@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    body { background: #0f1f14; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .admin-login-wrap {
+      background: #fff; border-radius: 16px; padding: 48px 40px 40px;
+      width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    }
+    .admin-login-logo { text-align: center; margin-bottom: 8px; }
+    .admin-login-logo .logo-leaf { font-size: 2.5rem; }
+    .admin-login-logo h1 { font-family: var(--font-display); font-size: 1.6rem; color: var(--primary-dark); margin: 8px 0 0; }
+    .admin-login-logo p { font-size: .85rem; color: var(--text-mid); margin: 6px 0 0; letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+    .admin-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff3cd; border: 1px solid #ffc107; border-radius: 20px;
+      padding: 4px 14px; font-size: .8rem; font-weight: 600; color: #856404;
+      margin: 16px auto 28px; display: flex; justify-content: center;
+    }
+    .form-group { margin-bottom: 18px; }
+    .form-label { display: block; font-size: .875rem; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; }
+    .form-control {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: .95rem; font-family: var(--font-body);
+      transition: border-color .2s; outline: none; background: #fff;
+    }
+    .form-control:focus { border-color: var(--primary); }
+    .has-error .form-control { border-color: var(--status-critical); }
+    .form-error { font-size: .8rem; color: var(--status-critical); margin-top: 4px; display: none; }
+    .has-error .form-error { display: block; }
+    .btn-admin {
+      width: 100%; padding: 13px; background: var(--primary); color: #fff;
+      border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
+      font-family: var(--font-body); cursor: pointer; transition: background .2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-admin:hover { background: var(--primary-dark); }
+    .btn-admin:disabled { opacity: .6; cursor: not-allowed; }
+    .login-error {
+      background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px;
+      padding: 10px 14px; font-size: .875rem; color: #991b1b;
+      margin-bottom: 16px; display: none;
+    }
+    .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .back-link { text-align: center; margin-top: 20px; font-size: .85rem; color: var(--text-mid); }
+    .back-link a { color: var(--primary); font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="admin-login-wrap">
+    <div class="admin-login-logo">
+      <div class="logo-leaf">🌿</div>
+      <h1>EcoCity Tracker</h1>
+      <p>Administration</p>
+    </div>
+    <div class="admin-badge">🔐 Superadmin Access</div>
+
+    <div class="login-error" id="loginError"></div>
+
+    <form id="adminLoginForm" novalidate>
+      <div class="form-group" id="grpUsername">
+        <label class="form-label" for="adminUsername">Username</label>
+        <input class="form-control" type="text" id="adminUsername" placeholder="superadmin" autocomplete="username" />
+        <div class="form-error">Username is required.</div>
+      </div>
+      <div class="form-group" id="grpPassword">
+        <label class="form-label" for="adminPassword">Password</label>
+        <input class="form-control" type="password" id="adminPassword" placeholder="••••••••" autocomplete="current-password" />
+        <div class="form-error">Password is required.</div>
+      </div>
+      <button class="btn-admin" type="submit" id="loginBtn">
+        <span id="loginBtnText">Sign In</span>
+        <div class="spinner" id="loginSpinner"></div>
+      </button>
+    </form>
+
+    <div class="back-link"><a href="../index.html">← Back to site</a></div>
+  </div>
+
+  <div id="toastContainer" style="position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;"></div>
+
+  <script>
+    'use strict';
+
+    // Redirect if already logged in
+    try {
+      var stored = localStorage.getItem('ecocity_admin');
+      if (stored) window.location.href = 'admin.html';
+    } catch (e) {}
+
+    function setError(id, show) {
+      var el = document.getElementById(id);
+      if (el) { if (show) el.classList.add('has-error'); else el.classList.remove('has-error'); }
+    }
+
+    function showError(msg) {
+      var el = document.getElementById('loginError');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    document.getElementById('adminUsername').addEventListener('blur', function () {
+      setError('grpUsername', !this.value.trim());
+    });
+    document.getElementById('adminPassword').addEventListener('blur', function () {
+      setError('grpPassword', !this.value);
+    });
+
+    document.getElementById('adminLoginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var username = document.getElementById('adminUsername').value.trim();
+      var password = document.getElementById('adminPassword').value;
+      var valid    = true;
+
+      if (!username) { setError('grpUsername', true);  valid = false; } else { setError('grpUsername', false); }
+      if (!password) { setError('grpPassword', true);  valid = false; } else { setError('grpPassword', false); }
+      if (!valid) return;
+
+      var btn  = document.getElementById('loginBtn');
+      var text = document.getElementById('loginBtnText');
+      var spin = document.getElementById('loginSpinner');
+      btn.disabled      = true;
+      text.style.display = 'none';
+      spin.style.display = 'block';
+      document.getElementById('loginError').style.display = 'none';
+
+      fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username, password: password })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data.success) {
+            try { localStorage.setItem('ecocity_admin', JSON.stringify({ token: data.token, username: data.username })); } catch (ex) {}
+            window.location.href = 'admin.html';
+          } else {
+            showError(data.message || 'Invalid credentials.');
+            btn.disabled       = false;
+            text.style.display = 'inline';
+            spin.style.display = 'none';
+          }
+        })
+        .catch(function () {
+          showError('Cannot connect to the server. Make sure the API is running.');
+          btn.disabled       = false;
+          text.style.display = 'inline';
+          spin.style.display = 'none';
+        });
+    });
+  </script>
+</body>
+</html>

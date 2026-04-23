@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="el">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,238 +8,465 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    /* ── Admin Shell ─────────────────────────────────────────── */
+    body { background: #f0f4f0; }
+    .admin-shell { display: flex; min-height: calc(100vh - 64px); }
+
+    /* Sidebar */
+    .ap-sidebar {
+      width: 230px; flex-shrink: 0; background: #1b3a22;
+      padding: 24px 0; display: flex; flex-direction: column; gap: 2px;
+      position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto;
+    }
+    .ap-sidebar-title {
+      font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255,255,255,.4); padding: 0 20px 8px; margin-top: 12px;
+    }
+    .ap-sidebar-title:first-child { margin-top: 0; }
+    .ap-nav-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+      color: rgba(255,255,255,.75); font-size: .9rem; font-weight: 500;
+      border: none; background: none; width: 100%; text-align: left; cursor: pointer;
+      transition: background .15s, color .15s; border-left: 3px solid transparent;
+      font-family: var(--font-body);
+    }
+    .ap-nav-item:hover  { background: rgba(255,255,255,.08); color: #fff; }
+    .ap-nav-item.active { background: rgba(255,255,255,.12); color: #fff; border-left-color: #4caf50; }
+    .ap-nav-badge { background: #ef4444; color: #fff; border-radius: 10px; padding: 1px 7px; font-size: .72rem; font-weight: 700; }
+    .ap-sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.1); }
+    .ap-sidebar-footer small { color: rgba(255,255,255,.4); font-size: .75rem; display: block; }
+    .btn-sidebar-logout {
+      margin-top: 8px; width: 100%; padding: 8px; background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.7); border: none; border-radius: 6px; font-size: .85rem;
+      cursor: pointer; font-family: var(--font-body); transition: background .15s;
+    }
+    .btn-sidebar-logout:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+    /* Main area */
+    .ap-main { flex: 1; padding: 32px; overflow-x: hidden; }
+    .ap-panel { display: none; }
+    .ap-panel.active { display: block; }
+    .ap-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .ap-panel-header h2 { font-family: var(--font-display); font-size: 1.5rem; color: var(--primary-dark); margin: 0; }
+
+    /* Stat cards */
+    .ap-stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .ap-stat-card { background: #fff; border-radius: 12px; padding: 20px 18px; box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary); }
+    .ap-stat-card.orange { border-left-color: #f59e0b; }
+    .ap-stat-card.red    { border-left-color: #ef4444; }
+    .ap-stat-card.blue   { border-left-color: #3b82f6; }
+    .ap-stat-card.purple { border-left-color: #8b5cf6; }
+    .ap-stat-val { font-size: 2rem; font-weight: 700; color: var(--primary-dark); font-family: var(--font-display); line-height: 1; }
+    .ap-stat-lab { font-size: .8rem; color: var(--text-mid); margin-top: 4px; font-weight: 500; }
+
+    /* Table card */
+    .ap-table-card { background: #fff; border-radius: 12px; box-shadow: var(--shadow-sm); overflow: hidden; }
+    .ap-table-toolbar { display: flex; gap: 10px; padding: 16px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid var(--border); }
+    .ap-search { flex: 1; min-width: 180px; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: .9rem; font-family: var(--font-body); outline: none; }
+    .ap-search:focus { border-color: var(--primary); }
+    .ap-table-wrap { overflow-x: auto; }
+    .ap-table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+    .ap-table th { background: #f8fdf8; padding: 12px 14px; text-align: left; font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-mid); border-bottom: 2px solid var(--border); white-space: nowrap; }
+    .ap-table td { padding: 12px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+    .ap-table tr:last-child td { border-bottom: none; }
+    .ap-table tr:hover td { background: #fafff8; }
+    .ap-table .empty-row td { text-align: center; padding: 40px; color: var(--text-light); }
+
+    /* Badges */
+    .tag-verified   { background: #dcfce7; color: #166534; border-radius: 20px; padding: 2px 10px; font-size: .75rem; font-weight: 600; }
+    .tag-unverified { background: #fef9c3; color: #854d0e; border-radius: 20px; padding: 2px 10px; font-size: .75rem; font-weight: 600; }
+    .tag-active     { background: #dcfce7; color: #166534; border-radius: 20px; padding: 2px 10px; font-size: .75rem; font-weight: 600; }
+    .tag-inactive   { background: #fee2e2; color: #991b1b; border-radius: 20px; padding: 2px 10px; font-size: .75rem; font-weight: 600; }
+
+    /* Action buttons */
+    .ap-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 6px; font-size: .8rem; font-weight: 600; border: none; cursor: pointer; font-family: var(--font-body); transition: opacity .15s, background .15s; }
+    .ap-btn:hover { opacity: .85; }
+    .ap-btn-edit   { background: #dbeafe; color: #1d4ed8; }
+    .ap-btn-delete { background: #fee2e2; color: #991b1b; }
+    .ap-btn-add    { background: var(--primary); color: #fff; padding: 9px 18px; font-size: .875rem; border-radius: 8px; }
+    .ap-btn-add:hover { background: var(--primary-dark); opacity: 1; }
+    .ap-btn-view   { background: #f3f4f6; color: var(--text-dark); }
+
+    /* Modal */
+    .ap-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .ap-modal-overlay.open { display: flex; }
+    .ap-modal { background: #fff; border-radius: 14px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+    .ap-modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .ap-modal-header h3 { margin: 0; font-family: var(--font-display); color: var(--primary-dark); font-size: 1.2rem; }
+    .ap-modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--text-mid); padding: 4px; }
+    .ap-modal-body { padding: 20px 24px; }
+    .ap-modal-footer { padding: 14px 24px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+    .ap-form-group { margin-bottom: 16px; }
+    .ap-form-label { display: block; font-size: .85rem; font-weight: 600; color: var(--text-dark); margin-bottom: 5px; }
+    .ap-form-label span { color: var(--status-critical); }
+    .ap-form-input, .ap-form-select {
+      width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: .9rem; font-family: var(--font-body); outline: none; transition: border-color .2s; background: #fff;
+    }
+    .ap-form-input:focus, .ap-form-select:focus { border-color: var(--primary); }
+    .ap-form-hint { font-size: .78rem; color: var(--text-mid); margin-top: 4px; }
+    .ap-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .ap-btn-cancel { background: #f3f4f6; color: var(--text-dark); padding: 9px 18px; border-radius: 8px; font-size: .875rem; font-weight: 600; border: none; cursor: pointer; font-family: var(--font-body); }
+    .ap-btn-save   { background: var(--primary); color: #fff; padding: 9px 18px; border-radius: 8px; font-size: .875rem; font-weight: 600; border: none; cursor: pointer; font-family: var(--font-body); }
+    .ap-btn-save:hover { background: var(--primary-dark); }
+    .ap-modal-error { background: #fee2e2; border-radius: 7px; padding: 8px 12px; font-size: .83rem; color: #991b1b; margin-bottom: 12px; display: none; }
+
+    /* Status select */
+    .status-sel { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: .8rem; font-family: var(--font-body); background: #fff; }
+
+    /* Report view area */
+    .report-detail { display: grid; grid-template-columns: 140px 1fr; gap: 8px 16px; font-size: .875rem; }
+    .report-detail .lbl { font-weight: 600; color: var(--text-mid); }
+    .report-detail .val { color: var(--text-dark); word-break: break-word; }
+
+    /* Export */
+    .export-card { background: #fff; border-radius: 12px; padding: 28px; box-shadow: var(--shadow-sm); max-width: 560px; }
+    .export-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+    @media (max-width: 768px) {
+      .admin-shell { flex-direction: column; }
+      .ap-sidebar { width: 100%; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: 8px; gap: 4px; }
+      .ap-sidebar-title { display: none; }
+      .ap-nav-item { width: auto; padding: 8px 14px; font-size: .8rem; }
+      .ap-main { padding: 16px; }
+      .ap-stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .ap-form-row { grid-template-columns: 1fr; }
+      .export-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
+  <!-- Top Nav -->
   <header class="site-header">
     <nav class="nav-inner">
-      <a href="../index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="../index.html" class="nav-link">Αρχική</a></li>
-        <li><a href="about.html" class="nav-link">About Us</a></li>
-        <li><a href="stats.html" class="nav-link">Στατιστικά</a></li>
-        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
-        <li><a href="help.html" class="nav-link">Βοήθεια</a></li>
-      </ul>
-      <div class="nav-user" id="navUser">
-        <div class="nav-login-menu" id="navLoginMenu" style="display:none;">
-          <button class="nav-login-btn" id="navLoginBtn">
-            <span class="nav-login-icon">🔐</span>
-            <span class="nav-login-text">Σύνδεση</span>
-            <span class="nav-login-caret">▾</span>
-          </button>
-          <div class="nav-login-dropdown" id="navLoginDropdown" style="display:none;">
-            <a href="auth.html" class="nav-login-option">
-              <span class="nav-login-opt-icon">👤</span>
-              <div><div class="nav-opt-title">Πολίτης</div><div class="nav-opt-sub">Σύνδεση ή εγγραφή</div></div>
-            </a>
-            <hr class="nav-divider" style="margin:0;">
-            <a href="official-login.html" class="nav-login-option nav-login-official">
-              <span class="nav-login-opt-icon">🏛</span>
-              <div><div class="nav-opt-title">Αρμόδιος</div><div class="nav-opt-sub">Πρόσβαση δήμου</div></div>
-            </a>
-          </div>
-        </div>
-        <div class="nav-user-menu" id="navUserMenu" style="display:none;">
-          <button class="nav-user-btn" id="navUserBtn">
-            <span id="navUserIcon">👤</span>
-            <span id="navUserName">Χρήστης</span>
-          </button>
-          <div class="nav-dropdown" id="navDropdown" style="display:none;">
-            <div class="nav-dropdown-info" id="navUserInfo">
-              <div class="nav-info-name" id="navInfoName">Χρήστης</div>
-              <div class="nav-info-email" id="navInfoEmail">user@example.com</div>
-            </div>
-            <hr class="nav-divider">
-            <a href="profile.html" id="navProfile">👤 Προφίλ</a>
-            <a href="my-reports.html" id="navReports" style="display:none;">📋 Οι Αναφορές μου</a>
-            <a href="official-dashboard.html" id="navDashboard" style="display:none;">🏛 Πίνακας Δήμου</a>
-            <hr class="nav-divider">
-            <a href="#" id="navLogout" class="nav-logout">🚪 Αποσύνδεση</a>
-          </div>
-        </div>
+      <a href="../index.html" class="nav-logo">
+        <span class="logo-leaf">🌿</span>
+        <span class="logo-text">EcoCity</span>
+        <span style="font-size:.75rem;background:#1b3a22;color:#fff;border-radius:12px;padding:2px 10px;margin-left:6px;font-weight:600;letter-spacing:.04em;">ADMIN</span>
+      </a>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
+        <span style="font-size:.875rem;color:var(--text-mid);">👤 <span id="adminUsernameDisplay">superadmin</span></span>
+        <button id="topLogout" style="background:none;border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:.85rem;cursor:pointer;color:var(--text-mid);font-family:var(--font-body);">Sign Out</button>
       </div>
-      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
     </nav>
   </header>
 
-  <section class="admin-section">
-    <div class="container">
-      <div class="admin-layout">
+  <div class="admin-shell">
+    <!-- Sidebar -->
+    <aside class="ap-sidebar">
+      <div class="ap-sidebar-title">Overview</div>
+      <button class="ap-nav-item active" data-panel="dashboard">📊 Dashboard</button>
 
-        <!-- Sidebar -->
-        <aside class="admin-sidebar">
-          <h3>Διαχείριση</h3>
-          <button class="admin-nav-item active" data-panel="reports">📋 Αναφορές<span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
-          <button class="admin-nav-item" data-panel="stats">📊 Στατιστικά</button>
-          <button class="admin-nav-item" data-panel="export">📥 Export</button>
-          <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;" />
-          <h3>Δήμος</h3>
-          <select class="form-select" id="adminMuniFilter" style="font-size:.85rem;">
-            <option value="all">Όλοι</option>
-            <option>Αθήνα</option>
-            <option>Πειραιάς</option>
-            <option>Αιγάλεω</option>
-            <option>Νίκαια</option>
-            <option>Περιστέρι</option>
-            <option>Χαλάνδρι</option>
-            <option>Γλυφάδα</option>
-            <option>Καλλιθέα</option>
-            <option>Ηλιούπολη</option>
-            <option>Μαρούσι</option>
-            <option>Κηφισιά</option>
-            <option>Παλαιό Φάληρο</option>
-          </select>
-        </aside>
+      <div class="ap-sidebar-title">Content</div>
+      <button class="ap-nav-item" data-panel="reports">📋 Reports <span class="ap-nav-badge" id="pendingBadge" style="display:none">0</span></button>
+      <button class="ap-nav-item" data-panel="users">👥 Users</button>
+      <button class="ap-nav-item" data-panel="municipalities">🏛 Municipalities</button>
+      <button class="ap-nav-item" data-panel="officials">👔 Officials</button>
 
-        <!-- Main content -->
-        <div class="admin-main">
+      <div class="ap-sidebar-title">Tools</div>
+      <button class="ap-nav-item" data-panel="export">📥 Export CSV</button>
 
-          <!-- Reports panel -->
-          <div id="panelReports">
-            <div class="admin-header-bar">
-              <h2>Αναφορές</h2>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="btn btn-secondary btn-sm" id="filterAll">Όλες</button>
-                <button class="btn btn-secondary btn-sm" id="filterPending">⏳ Εκκρεμείς</button>
-                <button class="btn btn-secondary btn-sm" id="filterCritical">🔴 Κρίσιμες</button>
-              </div>
-            </div>
+      <div class="ap-sidebar-footer">
+        <small>EcoCity Tracker — Superadmin</small>
+        <button class="btn-sidebar-logout" id="sidebarLogout">🚪 Sign Out</button>
+      </div>
+    </aside>
 
-            <div class="admin-stats-mini" id="adminMiniStats">
-              <div class="mini-stat"><div class="mini-stat-val" id="msTotalReports">—</div><div class="mini-stat-lab">Σύνολο</div></div>
-              <div class="mini-stat"><div class="mini-stat-val" id="msPending">—</div><div class="mini-stat-lab">Εκκρεμείς</div></div>
-              <div class="mini-stat"><div class="mini-stat-val" id="msResolved">—</div><div class="mini-stat-lab">Επιλύθηκαν</div></div>
-              <div class="mini-stat"><div class="mini-stat-val" id="msCritical">—</div><div class="mini-stat-lab">Κρίσιμες</div></div>
-            </div>
+    <!-- Main -->
+    <main class="ap-main">
 
-            <div class="admin-table-card">
-              <div class="table-toolbar">
-                <input class="table-search" type="text" id="tableSearch" placeholder="🔍 Αναζήτηση αναφοράς..." />
-                <select class="form-select" id="statusFilter" style="width:auto;">
-                  <option value="">Όλα τα status</option>
-                  <option value="pending">Εκκρεμεί</option>
-                  <option value="reviewed">Υπό εξέταση</option>
-                  <option value="resolved">Επιλύθηκε</option>
-                </select>
-              </div>
-              <div style="overflow-x:auto;">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>#ID</th>
-                      <th>Τίτλος</th>
-                      <th>Δήμος</th>
-                      <th>Κατηγορία</th>
-                      <th>Σοβαρότητα</th>
-                      <th>Ημερομηνία</th>
-                      <th>Status</th>
-                      <th>Ενέργεια</th>
-                    </tr>
-                  </thead>
-                  <tbody id="reportsTableBody">
-                    <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-light);">⏳ Φόρτωση...</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+      <!-- ── DASHBOARD ── -->
+      <div class="ap-panel active" id="panelDashboard">
+        <div class="ap-panel-header">
+          <h2>Dashboard</h2>
+          <button class="ap-btn ap-btn-view" id="btnRefreshDash">↻ Refresh</button>
+        </div>
+        <div class="ap-stat-grid" id="dashStats">
+          <div class="ap-stat-card"><div class="ap-stat-val" id="dTotal">—</div><div class="ap-stat-lab">Total Reports</div></div>
+          <div class="ap-stat-card orange"><div class="ap-stat-val" id="dPending">—</div><div class="ap-stat-lab">Pending</div></div>
+          <div class="ap-stat-card red"><div class="ap-stat-val" id="dCritical">—</div><div class="ap-stat-lab">Critical Open</div></div>
+          <div class="ap-stat-card blue"><div class="ap-stat-val" id="dUsers">—</div><div class="ap-stat-lab">Citizens</div></div>
+          <div class="ap-stat-card purple"><div class="ap-stat-val" id="dMunis">—</div><div class="ap-stat-lab">Municipalities</div></div>
+          <div class="ap-stat-card"><div class="ap-stat-val" id="dOfficials">—</div><div class="ap-stat-lab">Active Officials</div></div>
+        </div>
+        <p style="color:var(--text-mid);font-size:.875rem;">Use the sidebar to manage reports, users, municipalities and officials.</p>
+      </div>
+
+      <!-- ── REPORTS ── -->
+      <div class="ap-panel" id="panelReports">
+        <div class="ap-panel-header">
+          <h2>Reports</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <select class="ap-form-select" id="repMuniFilter" style="width:auto;">
+              <option value="all">All Municipalities</option>
+            </select>
+            <select class="ap-form-select" id="repStatusFilter" style="width:auto;">
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="reviewed">Reviewed</option>
+              <option value="resolved">Resolved</option>
+            </select>
           </div>
-
-          <!-- Stats panel -->
-          <div id="panelStats" style="display:none;">
-            <div class="admin-header-bar"><h2>Στατιστικά Admin</h2></div>
-            <p style="color:var(--text-mid);">Δες αναλυτικά στατιστικά στη σελίδα <a href="stats.html" style="color:var(--primary)">Στατιστικά →</a></p>
+        </div>
+        <div class="ap-table-card">
+          <div class="ap-table-toolbar">
+            <input class="ap-search" type="text" id="repSearch" placeholder="🔍 Search by title or category…" />
           </div>
-
-          <!-- Export panel -->
-          <div id="panelExport" style="display:none;">
-            <div class="admin-header-bar"><h2>Export Δεδομένων</h2></div>
-            <div class="form-card" style="max-width:100%;margin:0;">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label class="form-label">Δήμος</label>
-                  <select class="form-select" id="exportMuni">
-                    <option value="all">Όλοι οι δήμοι</option>
-                    <option>Αθήνα</option><option>Πειραιάς</option><option>Αιγάλεω</option>
-                    <option>Νίκαια</option><option>Περιστέρι</option><option>Χαλάνδρι</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Status</label>
-                  <select class="form-select" id="exportStatus">
-                    <option value="all">Όλα</option>
-                    <option value="pending">Εκκρεμείς</option>
-                    <option value="reviewed">Υπό εξέταση</option>
-                    <option value="resolved">Επιλυμένες</option>
-                  </select>
-                </div>
-                <div class="form-group full">
-                  <button class="btn btn-green" id="exportBtn">📥 Export σε CSV</button>
-                  <span class="form-hint" style="margin-top:8px;">Το αρχείο αποθηκεύεται ως <code>ecocity_export.csv</code> με UTF-8 encoding.</span>
-                </div>
-              </div>
-            </div>
+          <div class="ap-table-wrap">
+            <table class="ap-table">
+              <thead><tr>
+                <th>#ID</th><th>Title</th><th>Municipality</th><th>Category</th>
+                <th>Severity</th><th>Date</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="repTableBody"><tr class="empty-row"><td colspan="8">⏳ Loading…</td></tr></tbody>
+            </table>
           </div>
-
         </div>
       </div>
+
+      <!-- ── USERS ── -->
+      <div class="ap-panel" id="panelUsers">
+        <div class="ap-panel-header">
+          <h2>Users (Citizens)</h2>
+          <button class="ap-btn ap-btn-add" id="btnAddUser">+ Add User</button>
+        </div>
+        <div class="ap-table-card">
+          <div class="ap-table-toolbar">
+            <input class="ap-search" type="text" id="usrSearch" placeholder="🔍 Search by name, username or email…" />
+          </div>
+          <div class="ap-table-wrap">
+            <table class="ap-table">
+              <thead><tr>
+                <th>ID</th><th>Full Name</th><th>Username</th><th>Email</th>
+                <th>Municipality</th><th>Verified</th><th>Registered</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="usrTableBody"><tr class="empty-row"><td colspan="8">⏳ Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MUNICIPALITIES ── -->
+      <div class="ap-panel" id="panelMunicipalities">
+        <div class="ap-panel-header">
+          <h2>Municipalities</h2>
+          <button class="ap-btn ap-btn-add" id="btnAddMuni">+ Add Municipality</button>
+        </div>
+        <div class="ap-table-card">
+          <div class="ap-table-toolbar">
+            <input class="ap-search" type="text" id="muniSearch" placeholder="🔍 Search municipality…" />
+          </div>
+          <div class="ap-table-wrap">
+            <table class="ap-table">
+              <thead><tr>
+                <th>ID</th><th>Name</th><th>Reports</th><th>Active Officials</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="muniTableBody"><tr class="empty-row"><td colspan="5">⏳ Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── OFFICIALS ── -->
+      <div class="ap-panel" id="panelOfficials">
+        <div class="ap-panel-header">
+          <h2>Officials</h2>
+          <button class="ap-btn ap-btn-add" id="btnAddOfficial">+ Add Official</button>
+        </div>
+        <div class="ap-table-card">
+          <div class="ap-table-toolbar">
+            <input class="ap-search" type="text" id="offSearch" placeholder="🔍 Search by name or municipality…" />
+          </div>
+          <div class="ap-table-wrap">
+            <table class="ap-table">
+              <thead><tr>
+                <th>ID</th><th>Username</th><th>Full Name</th><th>Municipality</th>
+                <th>Status</th><th>Created</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="offTableBody"><tr class="empty-row"><td colspan="7">⏳ Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EXPORT ── -->
+      <div class="ap-panel" id="panelExport">
+        <div class="ap-panel-header"><h2>Export CSV</h2></div>
+        <div class="export-card">
+          <div class="export-row">
+            <div class="ap-form-group">
+              <label class="ap-form-label">Municipality</label>
+              <select class="ap-form-select" id="expMuni"><option value="all">All Municipalities</option></select>
+            </div>
+            <div class="ap-form-group">
+              <label class="ap-form-label">Status</label>
+              <select class="ap-form-select" id="expStatus">
+                <option value="all">All</option>
+                <option value="pending">Pending</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="resolved">Resolved</option>
+              </select>
+            </div>
+          </div>
+          <button class="ap-btn ap-btn-add" id="exportBtn" style="width:100%;justify-content:center;">📥 Download CSV</button>
+          <p class="ap-form-hint" style="margin-top:12px;">File saved as <code>ecocity_export.csv</code> with UTF-8 encoding.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ── Modal: User Add/Edit ── -->
+  <div class="ap-modal-overlay" id="modalUser">
+    <div class="ap-modal">
+      <div class="ap-modal-header">
+        <h3 id="modalUserTitle">Add User</h3>
+        <button class="ap-modal-close" data-close="modalUser">✕</button>
+      </div>
+      <div class="ap-modal-body">
+        <div class="ap-modal-error" id="modalUserError"></div>
+        <input type="hidden" id="modalUserId" />
+        <div class="ap-form-row">
+          <div class="ap-form-group">
+            <label class="ap-form-label">Full Name <span>*</span></label>
+            <input class="ap-form-input" type="text" id="uFullName" placeholder="John Doe" />
+          </div>
+          <div class="ap-form-group">
+            <label class="ap-form-label">Username <span>*</span></label>
+            <input class="ap-form-input" type="text" id="uUsername" placeholder="johndoe" />
+          </div>
+        </div>
+        <div class="ap-form-group">
+          <label class="ap-form-label">Email <span>*</span></label>
+          <input class="ap-form-input" type="email" id="uEmail" placeholder="john@example.com" />
+        </div>
+        <div class="ap-form-row">
+          <div class="ap-form-group">
+            <label class="ap-form-label">Password <span id="uPassReq">*</span></label>
+            <input class="ap-form-input" type="password" id="uPassword" placeholder="Min 6 characters" />
+            <div class="ap-form-hint" id="uPassHint"></div>
+          </div>
+          <div class="ap-form-group">
+            <label class="ap-form-label">Municipality</label>
+            <select class="ap-form-select" id="uMunicipality"><option value="">— None —</option></select>
+          </div>
+        </div>
+        <div class="ap-form-group">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.875rem;">
+            <input type="checkbox" id="uVerified" style="width:16px;height:16px;" />
+            Email verified
+          </label>
+        </div>
+      </div>
+      <div class="ap-modal-footer">
+        <button class="ap-btn-cancel" data-close="modalUser">Cancel</button>
+        <button class="ap-btn-save" id="modalUserSave">Save</button>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
-      <span>
-        <a href="privacy.html" style="color:rgba(255,255,255,.8);text-decoration:underline;margin-right:12px;">🔒 Απόρρητο & Άδεια</a>
-        <a href="about.html" style="color:rgba(255,255,255,.8);text-decoration:underline;">About Us</a>
-      </span>
-      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+  <!-- ── Modal: Municipality Add/Edit ── -->
+  <div class="ap-modal-overlay" id="modalMuni">
+    <div class="ap-modal">
+      <div class="ap-modal-header">
+        <h3 id="modalMuniTitle">Add Municipality</h3>
+        <button class="ap-modal-close" data-close="modalMuni">✕</button>
+      </div>
+      <div class="ap-modal-body">
+        <div class="ap-modal-error" id="modalMuniError"></div>
+        <input type="hidden" id="modalMuniId" />
+        <div class="ap-form-group">
+          <label class="ap-form-label">Name <span>*</span></label>
+          <input class="ap-form-input" type="text" id="muniName" placeholder="e.g. Αθήνα" />
+        </div>
+      </div>
+      <div class="ap-modal-footer">
+        <button class="ap-btn-cancel" data-close="modalMuni">Cancel</button>
+        <button class="ap-btn-save" id="modalMuniSave">Save</button>
+      </div>
     </div>
-  </footer>
+  </div>
 
-  <div id="toastContainer"></div>
+  <!-- ── Modal: Official Add/Edit ── -->
+  <div class="ap-modal-overlay" id="modalOfficial">
+    <div class="ap-modal">
+      <div class="ap-modal-header">
+        <h3 id="modalOfficialTitle">Add Official</h3>
+        <button class="ap-modal-close" data-close="modalOfficial">✕</button>
+      </div>
+      <div class="ap-modal-body">
+        <div class="ap-modal-error" id="modalOfficialError"></div>
+        <input type="hidden" id="modalOfficialId" />
+        <div class="ap-form-row">
+          <div class="ap-form-group">
+            <label class="ap-form-label">Full Name <span>*</span></label>
+            <input class="ap-form-input" type="text" id="oFullName" placeholder="Jane Smith" />
+          </div>
+          <div class="ap-form-group">
+            <label class="ap-form-label">Username <span>*</span></label>
+            <input class="ap-form-input" type="text" id="oUsername" placeholder="official_athens" />
+          </div>
+        </div>
+        <div class="ap-form-row">
+          <div class="ap-form-group">
+            <label class="ap-form-label">Password <span id="oPassReq">*</span></label>
+            <input class="ap-form-input" type="password" id="oPassword" placeholder="Min 6 characters" />
+            <div class="ap-form-hint" id="oPassHint"></div>
+          </div>
+          <div class="ap-form-group">
+            <label class="ap-form-label">Municipality <span>*</span></label>
+            <select class="ap-form-select" id="oMunicipality"><option value="">— Select —</option></select>
+          </div>
+        </div>
+        <div class="ap-form-group">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.875rem;">
+            <input type="checkbox" id="oActive" checked style="width:16px;height:16px;" />
+            Active (can log in)
+          </label>
+        </div>
+      </div>
+      <div class="ap-modal-footer">
+        <button class="ap-btn-cancel" data-close="modalOfficial">Cancel</button>
+        <button class="ap-btn-save" id="modalOfficialSave">Save</button>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    // Nav user management
-    function initNavUser() {
-      var user = null, official = null;
-      try { user     = JSON.parse(localStorage.getItem('ecocity_user')     || 'null'); } catch (e) {}
-      try { official = JSON.parse(localStorage.getItem('ecocity_official') || 'null'); } catch (e) {}
-      var nlm = document.getElementById('navLoginMenu');
-      var navUserMenu = document.getElementById('navUserMenu');
-      var navUserName = document.getElementById('navUserName');
-      var navDropdown = document.getElementById('navDropdown');
-      var navUserBtn  = document.getElementById('navUserBtn');
-      if (user || official) {
-        if (nlm) nlm.style.display = 'none';
-        navUserMenu.style.display = 'flex';
-        var cu = user || official;
-        navUserName.textContent = (cu.fullName || cu.username || 'Χρήστης') + (official ? ' (Αρμόδιος)' : '');
-        document.getElementById('navInfoName').textContent  = cu.fullName || cu.username || 'Χρήστης';
-        document.getElementById('navInfoEmail').textContent = cu.email || '';
-        var nr = document.getElementById('navReports'), nd = document.getElementById('navDashboard');
-        if (nr) nr.style.display = user ? 'block' : 'none';
-        if (nd) nd.style.display = official ? 'block' : 'none';
-        navUserBtn.addEventListener('click', function(e) { e.stopPropagation(); navDropdown.style.display = navDropdown.style.display === 'block' ? 'none' : 'block'; });
-        document.addEventListener('click', function(e) { if (!navUserMenu.contains(e.target)) navDropdown.style.display = 'none'; });
-        document.getElementById('navLogout').addEventListener('click', function(e) { e.preventDefault(); try { localStorage.removeItem('ecocity_user'); localStorage.removeItem('ecocity_official'); } catch(e2){} location.reload(); });
-      } else {
-        navUserMenu.style.display = 'none';
-        if (nlm) {
-          nlm.style.display = 'flex';
-          var nlBtn = document.getElementById('navLoginBtn'), nlDrop = document.getElementById('navLoginDropdown');
-          if (nlBtn && nlDrop) {
-            nlBtn.addEventListener('click', function(e) { e.stopPropagation(); var o = nlDrop.style.display === 'block'; nlDrop.style.display = o ? 'none' : 'block'; nlm.classList.toggle('open', !o); });
-            document.addEventListener('click', function(e) { if (!nlm.contains(e.target)) { nlDrop.style.display = 'none'; nlm.classList.remove('open'); } });
-          }
-        }
-      }
-    }
+  <!-- ── Modal: Report View ── -->
+  <div class="ap-modal-overlay" id="modalReport">
+    <div class="ap-modal" style="max-width:600px;">
+      <div class="ap-modal-header">
+        <h3 id="modalReportTitle">Report Details</h3>
+        <button class="ap-modal-close" data-close="modalReport">✕</button>
+      </div>
+      <div class="ap-modal-body" id="modalReportBody"></div>
+      <div class="ap-modal-footer">
+        <button class="ap-btn-cancel" data-close="modalReport">Close</button>
+      </div>
+    </div>
+  </div>
 
-    initNavUser();
-  </script>
+  <!-- ── Confirm Modal ── -->
+  <div class="ap-modal-overlay" id="modalConfirm">
+    <div class="ap-modal" style="max-width:400px;">
+      <div class="ap-modal-header">
+        <h3 id="confirmTitle">Confirm Action</h3>
+        <button class="ap-modal-close" data-close="modalConfirm">✕</button>
+      </div>
+      <div class="ap-modal-body">
+        <p id="confirmMessage" style="color:var(--text-dark);margin:0;"></p>
+      </div>
+      <div class="ap-modal-footer">
+        <button class="ap-btn-cancel" data-close="modalConfirm">Cancel</button>
+        <button class="ap-btn-save" id="confirmOk" style="background:#ef4444;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" style="position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;"></div>
 
   <script src="../js/admin.js"></script>
-  <script src="../js/notifications.js"></script>
 </body>
 </html>
