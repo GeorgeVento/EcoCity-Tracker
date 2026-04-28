@@ -200,9 +200,10 @@ npm start
 |----|-----------|--------|
 | F1–F17 | Core (auth, reports, stats, ranking, dashboards, export, notifications, help, privacy) | ✅ Ολοκληρωμένο |
 | F18 | Φόρμα ενδιαφέροντος για νέους δήμους (εμπλουτισμένη έκδοση) | 🟡 Σε εξέλιξη |
-| F19 | Live chat πολίτη ↔ αρμόδιου | 🟡 Σε εξέλιξη |
-| F20 | Production deployment σε hosting platform | 🟡 Σε εξέλιξη |
+| F19 | Production deployment σε hosting platform | 🟡 Σε εξέλιξη |
+| F20 | Δοκιμές Live chat με πραγματικούς χρήστες και αλλαγές | 🟡 Σε εξέλιξη |
 | F21 | End-to-end testing της MySQL σε production | 🟡 Σε εξέλιξη |
+
 
 ---
 
