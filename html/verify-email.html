@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Επιβεβαίωση Email — EcoCity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-inner">
+      <a href="../index.html" class="nav-logo"><span class="logo-leaf">🌿</span><span class="logo-text">EcoCity</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="stats.html" class="nav-link">Statistics</a></li>
+        <li><a href="ranking.html" class="nav-link">Ranking</a></li>
+        <li><a href="help.html" class="nav-link">Help</a></li>
+      </ul>
+      <div class="nav-user" id="navUser">
+        <div class="nav-login-menu" id="navLoginMenu" style="display:none;">
+          <button class="nav-login-btn" id="navLoginBtn">
+            <span class="nav-login-icon">🔐</span>
+            <span class="nav-login-text">Login</span>
+            <span class="nav-login-caret">▾</span>
+          </button>
+          <div class="nav-login-dropdown" id="navLoginDropdown" style="display:none;">
+            <a href="auth.html" class="nav-login-option">
+              <span class="nav-login-opt-icon">👤</span>
+              <div>
+                <div class="nav-opt-title">Citizen</div>
+                <div class="nav-opt-sub">Login or Register</div>
+              </div>
+            </a>
+            <hr class="nav-divider" style="margin:0;">
+            <a href="official-login.html" class="nav-login-option nav-login-official">
+              <span class="nav-login-opt-icon">🏛</span>
+              <div>
+                <div class="nav-opt-title">Official</div>
+                <div class="nav-opt-sub">Municipality Access</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="nav-user-menu" id="navUserMenu" style="display:none;">
+          <button class="nav-user-btn" id="navUserBtn">
+            <span id="navUserIcon">👤</span>
+            <span id="navUserName">Χρήστης</span>
+          </button>
+          <div class="nav-dropdown" id="navDropdown" style="display:none;">
+            <div class="nav-dropdown-info" id="navUserInfo">
+              <div class="nav-info-name" id="navInfoName">Χρήστης</div>
+              <div class="nav-info-email" id="navInfoEmail">user@example.com</div>
+            </div>
+            <hr class="nav-divider">
+            <a href="profile.html" id="navProfile">👤 Profile</a>
+            <a href="my-reports.html" id="navReports" style="display:none;">📋 My Reports</a>
+            <a href="official-dashboard.html" id="navDashboard" style="display:none;">🏛 Municipality Dashboard</a>
+            <hr class="nav-divider">
+            <a href="#" id="navLogout" class="nav-logout">🚪 Logout</a>
+          </div>
+        </div>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>✉️ Επιβεβαίωση Email</h1>
+    <p>Ολοκλήρωση εγγραφής στο EcoCity Tracker</p>
+  </section>
+
+  <section class="features" style="padding: 60px 0 80px;">
+    <div class="container">
+      <div style="max-width: 480px; margin: 0 auto; text-align: center;">
+
+        <!-- Loading state -->
+        <div id="stateLoading" class="feature-card" style="padding: 48px 36px;">
+          <div style="font-size: 2.4rem; margin-bottom: 16px;">⏳</div>
+          <h2 style="font-family: var(--font-display); color: var(--primary-dark); margin: 0 0 10px;">Επαλήθευση...</h2>
+          <p style="color: var(--text-mid); margin: 0;">Ελέγχουμε τον σύνδεσμο επιβεβαίωσης.</p>
+        </div>
+
+        <!-- Success state -->
+        <div id="stateSuccess" class="feature-card" style="padding: 48px 36px; display:none;">
+          <div style="font-size: 2.8rem; margin-bottom: 16px;">✅</div>
+          <h2 style="font-family: var(--font-display); color: var(--primary-dark); margin: 0 0 12px;">Email επιβεβαιώθηκε!</h2>
+          <p style="color: var(--text-mid); line-height: 1.7; margin: 0 0 28px;">
+            Ο λογαριασμός σου είναι πλέον πλήρως ενεργοποιημένος.
+            Μπορείς να συνδεθείς και να ξεκινήσεις να υποβάλεις αναφορές.
+          </p>
+          <a href="auth.html" class="btn btn-primary">🔐 Σύνδεση →</a>
+        </div>
+
+        <!-- Already verified state -->
+        <div id="stateAlready" class="feature-card" style="padding: 48px 36px; display:none;">
+          <div style="font-size: 2.8rem; margin-bottom: 16px;">ℹ️</div>
+          <h2 style="font-family: var(--font-display); color: var(--primary-dark); margin: 0 0 12px;">Ήδη επιβεβαιωμένο</h2>
+          <p style="color: var(--text-mid); line-height: 1.7; margin: 0 0 28px;">
+            Το email σου είναι ήδη επιβεβαιωμένο. Μπορείς να συνδεθείς κανονικά.
+          </p>
+          <a href="auth.html" class="btn btn-primary">🔐 Σύνδεση →</a>
+        </div>
+
+        <!-- Error state -->
+        <div id="stateError" class="feature-card" style="padding: 48px 36px; display:none;">
+          <div style="font-size: 2.8rem; margin-bottom: 16px;">❌</div>
+          <h2 style="font-family: var(--font-display); color: var(--primary-dark); margin: 0 0 12px;" id="errTitle">Σφάλμα επιβεβαίωσης</h2>
+          <p style="color: var(--text-mid); line-height: 1.7; margin: 0 0 28px;" id="errMsg">
+            Ο σύνδεσμος επιβεβαίωσης είναι άκυρος ή έχει λήξει.
+          </p>
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="auth.html?mode=register" class="btn btn-primary">Νέα Εγγραφή →</a>
+            <a href="../index.html" class="btn" style="background: var(--light-bg); color: var(--text-dark);">Αρχική</a>
+          </div>
+        </div>
+
+        <!-- No token state -->
+        <div id="stateNoToken" class="feature-card" style="padding: 48px 36px; display:none;">
+          <div style="font-size: 2.8rem; margin-bottom: 16px;">🔗</div>
+          <h2 style="font-family: var(--font-display); color: var(--primary-dark); margin: 0 0 12px;">Σύνδεσμος λείπει</h2>
+          <p style="color: var(--text-mid); line-height: 1.7; margin: 0 0 28px;">
+            Χρησιμοποίησε τον σύνδεσμο που έλαβες στο email εγγραφής σου.
+          </p>
+          <a href="../index.html" class="btn btn-primary">Αρχική →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 EcoCity — Πλατφόρμα Αναφορών Πολιτών</span>
+      <span>
+        <a href="privacy.html" style="color:rgba(255,255,255,.8);text-decoration:underline;margin-right:12px;">🔒 Απόρρητο &amp; Άδεια</a>
+        <a href="about.html" style="color:rgba(255,255,255,.8);text-decoration:underline;">About Us</a>
+      </span>
+      <span class="footer-credits">Βεντουράτος · Χριστοδούλου · Παπαδάκης · ΣΑΕΚ ΑΙΓΑΛΕΩ</span>
+    </div>
+  </footer>
+
+  <div id="toastContainer"></div>
+
+  <script>
+    (function () {
+      var token = new URLSearchParams(window.location.search).get('token');
+
+      function show(id) {
+        ['stateLoading','stateSuccess','stateAlready','stateError','stateNoToken'].forEach(function (s) {
+          document.getElementById(s).style.display = s === id ? 'block' : 'none';
+        });
+      }
+
+      if (!token) {
+        show('stateNoToken');
+        return;
+      }
+
+      fetch('/api/auth/verify-email?token=' + encodeURIComponent(token))
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data.success && data.alreadyVerified) {
+            show('stateAlready');
+          } else if (data.success) {
+            show('stateSuccess');
+          } else {
+            var msg = data.message || 'Ο σύνδεσμος είναι άκυρος ή έχει λήξει.';
+            if (msg.includes('λήξ')) {
+              document.getElementById('errTitle').textContent = 'Σύνδεσμος έληξε';
+              document.getElementById('errMsg').textContent = 'Ο σύνδεσμος επιβεβαίωσης ισχύει για 24 ώρες. Κάνε νέα εγγραφή.';
+            } else {
+              document.getElementById('errMsg').textContent = msg;
+            }
+            show('stateError');
+          }
+        })
+        .catch(function () {
+          document.getElementById('errMsg').textContent = 'Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή. Δοκίμασε ξανά.';
+          show('stateError');
+        });
+    })();
+  </script>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

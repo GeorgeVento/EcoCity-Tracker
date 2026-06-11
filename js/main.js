@@ -17,7 +17,7 @@ window.initNavUser = function () {
     if (navUserMenu) {
       navUserMenu.style.display = 'flex';
       var cu = user || official;
-      if (navUserName) navUserName.textContent = (cu.fullName || cu.username || 'Χρήστης') + (official ? ' (Αρμόδιος)' : '');
+      if (navUserName) navUserName.textContent = (cu.fullName || cu.username || 'User') + (official ? ' (Official)' : '');
       var infoName  = document.getElementById('navInfoName');
       var infoEmail = document.getElementById('navInfoEmail');
       if (infoName)  infoName.textContent  = cu.fullName || cu.username || 'Χρήστης';

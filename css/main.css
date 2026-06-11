@@ -542,8 +542,46 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
  
 /* ════════════════════════════════════════════════════════════
-   RESPONSIVE — MOBILE FIXES
+   RESPONSIVE — ALL BREAKPOINTS
    ════════════════════════════════════════════════════════════ */
+
+/* ── Large Screen / TV (≥ 1440px) ───────────────────────────── */
+@media (min-width: 1440px) {
+  .container, .nav-inner { max-width: 1320px; }
+  .nav-logo { font-size: 1.4rem; }
+  .nav-link { font-size: 1rem; padding: 8px 18px; }
+  .hero { padding: 120px 40px 100px; }
+  .hero-sub { font-size: 1.2rem; max-width: 620px; }
+  .features { padding: 100px 0; }
+  .features-grid { gap: 36px; }
+  .feature-card { padding: 44px 36px; }
+  .feature-card h3 { font-size: 1.15rem; }
+  .feature-card p  { font-size: .95rem; }
+  .counter-section { padding: 90px 0; }
+  .recent-section { padding: 100px 0; }
+  .cta-section { padding: 100px 0; }
+  .cta-box { padding: 80px 60px; }
+  .cta-box h2 { font-size: 2.6rem; }
+  .page-hero { padding: 80px 40px; }
+  .form-card { padding: 52px 56px; max-width: 820px; }
+  .form-input, .form-select, .form-textarea { font-size: 1rem; padding: 13px 16px; }
+  .btn { font-size: 1rem; padding: 14px 30px; }
+}
+
+/* ── Intermediate Tablet (769px – 1024px) ─────────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container, .nav-inner { padding: 0 20px; }
+  .nav-inner { gap: 16px; }
+  .nav-link { padding: 6px 10px; font-size: .85rem; }
+  .hero { padding: 72px 20px 56px; }
+  .features-grid { gap: 20px; }
+  .feature-card { padding: 28px 20px; }
+  .form-card { padding: 32px 28px; }
+  .admin-layout { grid-template-columns: 200px 1fr; gap: 20px; }
+  .stats-layout { grid-template-columns: 240px 1fr; gap: 20px; }
+  .mun-cta-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+  .cta-box { padding: 52px 36px; }
+}
 
 /* ── Tablet (≤ 900px) ────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -580,19 +618,20 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   .nav-links li   { width: 100%; }
   .nav-link { display: block; width: 100%; padding: 10px 14px; }
   .nav-toggle { display: flex; }
-  .nav-user   { margin-left: 8px; gap: 4px; }
+  .nav-user   { margin-left: auto; gap: 4px; }
   #navUserName { display: none; }
   .nav-login-text { display: none; }
   .nav-login-caret { display: none; }
-  .nav-login-btn { padding: 6px 10px; gap: 4px; }
+  .nav-login-btn { padding: 8px 12px; gap: 4px; font-size: .85rem; }
   .nav-login-dropdown { right: 0; min-width: 200px; }
+  .nav-login-icon { font-size: 1rem; }
 
   /* Hamburger → X animation */
   .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .nav-toggle.open span:nth-child(2) { opacity: 0; }
   .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  .site-header { position: relative; }
+  .site-header { position: sticky; top: 0; z-index: 100; }
 
   /* --- Hero --- */
   .hero { padding: 56px 20px 48px; }
@@ -663,7 +702,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 
 /* ── Small Mobile (≤ 480px) ─────────────────────────────────── */
 @media (max-width: 480px) {
-  .container { padding: 0 16px; }
+  .container { padding: 0 12px; }
 
   .admin-stats-mini { grid-template-columns: 1fr; }
   .features-grid    { grid-template-columns: 1fr; }
@@ -671,20 +710,41 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   [style*="minmax(160px, 1fr)"] { grid-template-columns: 1fr !important; }
 
   .cta-box { padding: 32px 16px; }
+  .cta-box h2 { font-size: 1.35rem; }
 
-  #toastContainer { left: 16px; right: 16px; bottom: 16px; }
-  .toast { max-width: 100%; }
+  #toastContainer { left: 12px; right: 12px; bottom: 12px; }
+  .toast { max-width: 100%; font-size: .85rem; padding: 12px 16px; }
 
   /* Ranking: hide bar on tiny screens */
   .rank-bar-wrap { display: none; }
 
   /* Help page */
   .cat-tabs       { flex-direction: column; }
+  .cat-tab        { min-width: unset; width: 100%; }
   .chat-info-grid { flex-direction: column; align-items: center; }
   .chat-msg       { max-width: 90%; }
 
   /* Municipality form submit */
   .mun-steps-grid { grid-template-columns: 1fr !important; }
+
+  /* Forms on small screens */
+  .form-card { padding: 20px 14px; border-radius: var(--radius-md); }
+  .form-submit-bar { margin-top: 20px; }
+  .page-hero h1 { font-size: 1.6rem; }
+  .page-hero p  { font-size: .9rem; }
+
+  /* Hero */
+  .hero { padding: 44px 16px 40px; }
+  .hero-badge { font-size: .72rem; padding: 5px 14px; }
+  .hero-actions .btn { max-width: 100%; padding: 14px 20px; }
+
+  /* Counter */
+  .counter-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .counter-item { padding: 16px 8px; }
+
+  /* Footer */
+  .footer-inner { padding: 0 12px; font-size: .8rem; }
+  .footer-credits { display: none; }
 }
 
 /* ── Help / Chat styles ─────────────────────────────────────── */

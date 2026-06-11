@@ -5,16 +5,29 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 
 const mysql = require('mysql2/promise');
 
-const pool = mysql.createPool({
-  host:               process.env.DB_HOST     || '127.0.0.1',
-  port:               parseInt(process.env.DB_PORT || '3306', 10),
-  user:               process.env.DB_USER     || 'root',
-  password:           process.env.DB_PASSWORD || 'root',
-  database:           process.env.DB_NAME     || 'ecocity',
+var poolConfig = {
   waitForConnections: true,
   connectionLimit:    10,
   charset:            'utf8mb4'
-});
+};
+
+// Support DATABASE_URL (e.g. Railway, Render, PlanetScale)
+if (process.env.DATABASE_URL) {
+  poolConfig.uri = process.env.DATABASE_URL;
+} else {
+  poolConfig.host     = process.env.DB_HOST     || '127.0.0.1';
+  poolConfig.port     = parseInt(process.env.DB_PORT || '3306', 10);
+  poolConfig.user     = process.env.DB_USER     || 'root';
+  poolConfig.password = process.env.DB_PASSWORD || 'root';
+  poolConfig.database = process.env.DB_NAME     || 'ecocity';
+}
+
+// Enable SSL for cloud databases (set DB_SSL=true in .env)
+if (process.env.DB_SSL === 'true' || process.env.DATABASE_URL) {
+  poolConfig.ssl = { rejectUnauthorized: false };
+}
+
+const pool = mysql.createPool(poolConfig);
 
 async function initDB() {
   await pool.query(`

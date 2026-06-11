@@ -214,7 +214,7 @@ function initNavUser() {
     currentUser = user || official;
     navUserMenu.style.display = 'flex';
     var displayName = (user || official).fullName || (user || official).username || 'Χρήστης';
-    navUserName.textContent = displayName + (official ? ' (Αρμόδιος)' : '');
+    navUserName.textContent = displayName + (official ? ' (Official)' : '');
     document.getElementById('navInfoName').textContent  = displayName;
     document.getElementById('navInfoEmail').textContent = (user || official).email || '';
 

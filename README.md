@@ -75,6 +75,7 @@ ecocity-tracker/
 │   ├── auth.html                 ← Login / Register πολίτη
 │   ├── forgot-password.html      ← Αίτημα reset
 │   ├── reset-password.html       ← Νέος κωδικός με token
+│   ├── verify-email.html         ← Επιβεβαίωση email εγγραφής
 │   ├── report.html               ← Φόρμα νέας αναφοράς (GPS + photo)
 │   ├── my-reports.html           ← Οι αναφορές μου
 │   ├── profile.html              ← Προφίλ χρήστη
@@ -153,6 +154,18 @@ npm start
 
 🌐 Άνοιξε: `http://localhost:3000`
 
+### Cloud Hosting (Railway / Render / Heroku)
+
+```bash
+# Αντί για DB_HOST / DB_USER / DB_PASSWORD / DB_NAME, ορίζουμε:
+DATABASE_URL=mysql://user:password@host:port/dbname
+DB_SSL=true          # αυτόματα ενεργό όταν υπάρχει DATABASE_URL
+APP_URL=https://your-app.up.railway.app
+
+# Τρέξε seed μία φορά στο cloud περιβάλλον για να δημιουργηθούν δήμοι & αρμόδιοι:
+npm run seed
+```
+
 ---
 
 ## 👤 Δοκιμαστικοί Λογαριασμοί
@@ -176,7 +189,7 @@ npm start
 |--------|---------|------|
 | POST | `/api/auth/register` | Public |
 | POST | `/api/auth/login` | Public |
-| GET | `/api/auth/verify/:token` | Public |
+| GET | `/api/auth/verify-email?token=:token` | Public |
 | POST | `/api/auth/forgot-password` | Public |
 | POST | `/api/auth/reset-password` | Public |
 | POST | `/api/auth/official-login` | Public |
@@ -199,10 +212,10 @@ npm start
 | ID | Λειτουργία | Status |
 |----|-----------|--------|
 | F1–F17 | Core (auth, reports, stats, ranking, dashboards, export, notifications, help, privacy) | ✅ Ολοκληρωμένο |
-| F18 | Φόρμα ενδιαφέροντος για νέους δήμους (εμπλουτισμένη έκδοση) | 🟡 Σε εξέλιξη |
-| F19 | Production deployment σε hosting platform | 🟡 Σε εξέλιξη |
-| F20 | Δοκιμές Live chat με πραγματικούς χρήστες και αλλαγές | 🟡 Σε εξέλιξη |
-| F21 | End-to-end testing της MySQL σε production | 🟡 Σε εξέλιξη |
+| F18 | Φόρμα ενδιαφέροντος νέων δήμων + αίτημα εγγραφής δήμου (about.html + help.html) | ✅ Ολοκληρωμένο |
+| F19 | Production deployment σε hosting platform (Procfile, DATABASE_URL, DB_SSL, seed.js) | ✅ Ολοκληρωμένο |
+| F20 | Live Chat υποστήριξης μέσω Tawk.to με auto-set ονόματος/email για συνδεδεμένους | ✅ Ολοκληρωμένο |
+| F21 | Email επιβεβαίωσης εγγραφής — verify-email.html + /api/auth/verify-email endpoint | ✅ Ολοκληρωμένο |
 
 
 ---
